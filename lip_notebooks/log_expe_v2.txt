@@ -1,0 +1,17 @@
+nohup: ignoring input
+loading Data :
+Loading Model :
+Compiling Model :
+Generating Sample :
+Generating Certificates :
+Point  0 attaques trouvées : tensor([1.8734], device='cuda:0') tensor([1.5448], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  1 attaques trouvées : tensor([0.8871], device='cuda:0') tensor([0.6675], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  2 attaques trouvées : tensor([0.9517], device='cuda:0') tensor([0.7904], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  3 attaques trouvées : tensor([1.1003], device='cuda:0') tensor([0.8657], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  4 attaques trouvées : tensor([1.8158], device='cuda:0') tensor([1.4394], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  5 attaques trouvées : tensor([1.7553], device='cuda:0') tensor([1.4133], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  6 attaques trouvées : tensor([0.4935], device='cuda:0') tensor([0.3112], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  7 attaques trouvées : tensor([2.0061], device='cuda:0') tensor([1.6386], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  8 attaques trouvées : tensor([0.3719], device='cuda:0') tensor([0.2286], device='cuda:0', grad_fn=<SqrtBackward0>)
+Point  9 attaques trouvées : tensor([3.3774], device='cuda:0') tensor([2.7623], device='cuda:0', grad_fn=<SqrtBackward0>)
+./run.sh: line 3:  7040 Terminated              python Pess_Opt_Radius_MNIST_v2.py
