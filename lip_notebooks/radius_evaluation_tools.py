@@ -2,6 +2,12 @@ import numpy as np
 import keras.ops as K
 import torchattacks
 import keras
+from decomon.layers import DecomonLayer
+from decomon.models import clone
+from lipschitz_custom_tools import affine_bound_groupsort_output_keras, affine_bound_sqrt_output_keras, affine_bound_square_output_keras
+from decomon.perturbation_domain import BallDomain
+from decomon import get_lower_noise, get_range_noise, get_upper_noise
+from deel.lip.activations import GroupSort, GroupSort2
 
 # Compute 1-lip certificates
 def compute_certificate(images, model, L=1):    
@@ -76,4 +82,35 @@ def single_compute_optimistic_radius_AA_binary(idx, images, targets, certificate
             d_low = eps_current
         else:
             eps_working = d_up = (image - adv_image).square().sum(dim=(1, 2, 3)).sqrt()
+    return eps_working
+
+class DecomonGroupSort2(DecomonLayer):
+    layer : GroupSort2
+    increasing = True
+    def get_affine_bounds(self, lower, upper):
+        (W_low, b_low), (W_up, b_up) = affine_bound_groupsort_output_keras(lower, upper)
+        return W_low, b_low, W_up, b_up
+
+def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
+    image = images[idx:idx+1]
+    target = targets[idx:idx+1]
+    # certificate = certificates[idx:idx+1]
+    # We use dichotomy algorithm to fine the smallest optimistic radius
+    # We start from the closest point with different class
+    d_up = starting_point_dichotomy(idx, images, targets)
+    eps_working = d_low = 0
+    for _ in range(n_iter):
+        eps_current = (d_up+d_low)/2
+        # print(eps_current)
+        perturbation_domain = BallDomain(eps=eps_current, p=2)
+        decomon_model = clone(model, mapping_keras2decomon_classes={GroupSort2:DecomonGroupSort2}, final_ibp=True, final_affine=False, perturbation_domain=perturbation_domain)
+        upper = get_upper_noise(decomon_model,  image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
+        lower = get_lower_noise(decomon_model, image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
+
+        if (target==0 and upper<=0) or (target==1 and lower<=0):
+            # print("working", target, upper, lower)
+            eps_working = d_low = eps_current
+        else:
+            # print("not working", target, upper, lower)
+            d_up = eps_current
     return eps_working

@@ -64,45 +64,26 @@ if __name__ == "__main__":
     # Generate the test sample for radius evaluation
     images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model_bis)
    
-    # total_points = images.shape[0]
     total_points = images.shape[0]
 
-    # Compute Lipschitz Pessimistic Certificates
-    print("Generating Certificates :")
-    lip_radius = compute_binary_certificate(images, vanilla_model)
-    
-
     # Initialize the CSV file with column headers
-    columns = ["Index", "Label_GT", "Predicted_Label", "Lipschitz_Constant", "Robust_Epsilon", "Adv_Epsilon_AA", "Adv_Epsilon_PGD"]
-    csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output_10first.csv"
-    pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output_10first.pkl"
+    input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.csv"
+    input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.pkl"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.pkl"
 
-    # Create an empty file with headers
-    pd.DataFrame(columns=columns).to_csv(csv_path, index=False)
+    # input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first.csv"
+    # input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first.pkl"
+    # output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first_Decomon.csv"
+    # output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first_Decomon.pkl"
 
-    df_list = []  # Temporary list for storage before Pickle
+    list_eps = []
 
     for i in range(total_points):
-        eps_pgd = single_compute_optimistic_radius_PGD(i, images, labels, lip_radius, vanilla_model_bis, n_iter=10)
-        eps_aa = single_compute_optimistic_radius_AA_binary(i,images, labels, lip_radius, vanilla_model_bis, n_iter=10)
-        print("Point ", i, "attaques trouvées :", eps_pgd, eps_aa)
-        # Create a row
-        row = {
-            "Index": i ,
-            "Label_GT": labels[i].detach().cpu().numpy(),
-            "Predicted_Label": np.argmax(vanilla_model(images[i:i+1]).detach().cpu().numpy(), axis=1)[0],
-            "Lipschitz_Constant": 1.0,
-            "Robust_Epsilon": lip_radius[i].detach().cpu().numpy(),
-            "Adv_Epsilon_AA": eps_aa[0].detach().cpu().numpy(),
-            "Adv_Epsilon_PGD": eps_pgd[0].detach().cpu().numpy()
-        }
+        list_eps.append(single_compute_decomon_radius(i, images, labels, vanilla_model).cpu().detach().numpy())
         
-        # Append to CSV file without rewriting the header
-        pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
-        
-        # Append to the list for Pickle
-        df_list.append(row)
-        
-        # Save to Pickle at each iteration
-        pd.DataFrame(df_list).to_pickle(pkl_path)
+    df = pd.read_csv(input_csv_path)
 
+    df["Decomon"] = list_eps
+    df.to_pickle(output_pkl_path)
+    df.to_csv(output_csv_path, mode='a', header=False, index=False)
