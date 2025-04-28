@@ -1,0 +1,3 @@
+Index,Label_GT,Predicted_Label,Lipschitz_Constant,Robust_Epsilon,Adv_Epsilon_AA,Adv_Epsilon_PGD
+0,0,0,1.0,1.6612896,1.8072139,1.8122667
+1,0,0,1.0,3.027657,3.2537198,3.2539833

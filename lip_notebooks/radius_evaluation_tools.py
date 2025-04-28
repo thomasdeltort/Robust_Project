@@ -8,6 +8,11 @@ def compute_certificate(images, model, L=1):
     values, _ = K.top_k(model(images), k=2)
     certificates = (values[:, 0] - values[:, 1]) / (np.sqrt(2)*L)
     return certificates  
+# Compute 1-lip certificate for single output neurons
+def compute_binary_certificate(images, model, L=1):    
+    values = model(images)[:,0]
+    certificates = K.abs(values)/L
+    return certificates   
 # Compute the starting Point for Dichotomy, it corresponds to the 
 # l2 distance with the closest point with different class
 def starting_point_dichotomy(idx, images, targets):
@@ -23,6 +28,7 @@ def single_compute_optimistic_radius_PGD(idx, images, targets, certificates, mod
     # We start from the closest point with different class
     eps_working = d_up = starting_point_dichotomy(1, images, targets)
     d_low = certificate
+    print(d_up, d_low)
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
         # atk_van = torchattacks.PGDL2(model, eps=eps_current, alpha=eps_current/5, steps=10, random_start=True)

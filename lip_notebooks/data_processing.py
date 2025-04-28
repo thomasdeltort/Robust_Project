@@ -155,5 +155,4 @@ def select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, model):
             idx_list.append(idx[j])
     images = K.convert_to_tensor(images_list)
     labels = K.convert_to_tensor(labels_list)
-    labels.shape
     return images, labels, idx_list 

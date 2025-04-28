@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Compute Lipschitz Pessimistic Certificates
     print("Generating Certificates :")
     lip_radius = compute_certificate(images, vanilla_model)
-    
+    print("certificate : ", lip_radius[:10])
 
     # Initialize the CSV file with column headers
     columns = ["Index", "Label_GT", "Predicted_Label", "Lipschitz_Constant", "Robust_Epsilon", "Adv_Epsilon_AA", "Adv_Epsilon_PGD"]
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST.pkl"
 
     # Create an empty file with headers
-    pd.DataFrame(columns=columns).to_csv(csv_path, index=False)
+    # pd.DataFrame(columns=columns).to_csv(csv_path, index=False)
 
     df_list = []  # Temporary list for storage before Pickle
 
@@ -93,11 +93,11 @@ if __name__ == "__main__":
         }
         
         # Append to CSV file without rewriting the header
-        pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
+        # pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
         
         # Append to the list for Pickle
-        df_list.append(row)
+        # df_list.append(row)
         
         # Save to Pickle at each iteration
-        pd.DataFrame(df_list).to_pickle(pkl_path)
+        # pd.DataFrame(df_list).to_pickle(pkl_path)
 
