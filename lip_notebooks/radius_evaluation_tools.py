@@ -26,9 +26,9 @@ def single_compute_optimistic_radius_PGD(idx, images, targets, certificates, mod
     certificate = certificates[idx:idx+1]
     # We use dichotomy algorithm to fine the smallest optimistic radius
     # We start from the closest point with different class
-    eps_working = d_up = starting_point_dichotomy(1, images, targets)
+    eps_working = d_up = starting_point_dichotomy(idx, images, targets)
     d_low = certificate
-    print(d_up, d_low)
+    # print(d_up, d_low)
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
         # atk_van = torchattacks.PGDL2(model, eps=eps_current, alpha=eps_current/5, steps=10, random_start=True)
@@ -47,7 +47,7 @@ def single_compute_optimistic_radius_AA(idx, images, targets, certificates, mode
     certificate = certificates[idx:idx+1]
     # We use dichotomy algorithm to fine the smallest optimistic radius
     # We start from the closest point with different class
-    eps_working = d_up = starting_point_dichotomy(1, images, targets)
+    eps_working = d_up = starting_point_dichotomy(idx, images, targets)
     d_low = d_low = certificate
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
@@ -66,7 +66,7 @@ def single_compute_optimistic_radius_AA_binary(idx, images, targets, certificate
     certificate = certificates[idx:idx+1]
     # We use dichotomy algorithm to fine the smallest optimistic radius
     # We start from the closest point with different class
-    eps_working = d_up = starting_point_dichotomy(1, images, targets)
+    eps_working = d_up = starting_point_dichotomy(idx, images, targets)
     d_low = d_low = certificate
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2

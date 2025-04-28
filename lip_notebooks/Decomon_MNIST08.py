@@ -13,16 +13,11 @@ from deel.lip.activations import GroupSort
 from deel.lip.losses import MulticlassHKR, MulticlassKR, HKR, HingeMargin
 from keras.layers import Input, Flatten
 from keras.optimizers import Adam
-from keras.datasets import fashion_mnist
-from keras.utils import to_categorical
 import numpy as np
 import keras.ops as K
 import matplotlib.pyplot as plt
-import torchattacks
 import torch
 import torch.nn as nn
-import torchattacks
-from robustbench.utils import clean_accuracy
 import pandas as pd
 import pickle
 
@@ -30,16 +25,11 @@ import pickle
 from radius_evaluation_tools import *
 from data_processing import * 
 
-
-# model = keras.models.load_model("/home/aws_install/robustess_project/deel-lip/docs/notebooks/demo4_vanilla_fashionMNIST_channelfirst.keras")
-# model.compile(
-#     # decreasing alpha and increasing min_margin improve robustness (at the cost of accuracy)
-#     # note also in the case of lipschitz networks, more robustness require more parameters.
-#     loss=MulticlassHKR(alpha=100, min_margin=0.25),
-#     optimizer=Adam(1e-4),
-#     metrics=["accuracy", MulticlassKR()],)
-# model.summary()
-
+from decomon.layers import DecomonLayer
+from decomon.models import clone
+from lipschitz_custom_tools import affine_bound_groupsort_output_keras, affine_bound_sqrt_output_keras, affine_bound_square_output_keras
+from decomon.perturbation_domain import BallDomain
+from decomon import get_lower_noise, get_range_noise, get_upper_noise
 
 
 if __name__ == "__main__":

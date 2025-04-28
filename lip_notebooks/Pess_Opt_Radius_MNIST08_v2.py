@@ -71,7 +71,7 @@ if __name__ == "__main__":
     images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model)
    
     # total_points = images.shape[0]
-    total_points = 10
+    total_points = images.shape[0]
 
     # Compute Lipschitz Pessimistic Certificates
     print("Generating Certificates :")

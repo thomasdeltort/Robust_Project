@@ -149,6 +149,7 @@ def select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, model):
         images = K.convert_to_tensor(x.astype("float32"), dtype="float32")
         labels = K.convert_to_tensor(y, dtype="int64")
         # repeat the input 10 times, one per misclassification target
+        print(images.shape)
         for j in range(100):
             images_list.append(images[j])
             labels_list.append(labels[j])
