@@ -80,6 +80,7 @@ if __name__ == "__main__":
     list_eps = []
 
     for i in range(total_points):
+        print(i)
         list_eps.append(single_compute_decomon_radius(i, images, labels, vanilla_model).cpu().detach().numpy())
         
     df = pd.read_csv(input_csv_path)

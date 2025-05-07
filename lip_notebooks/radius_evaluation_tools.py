@@ -24,7 +24,8 @@ def compute_binary_certificate(images, model, L=1):
 def starting_point_dichotomy(idx, images, targets):
     mask_different_classes = targets[idx] != targets
     images_diffferent_classes = images[mask_different_classes]
-    return K.amin((images[idx] - images_diffferent_classes).square().sum(dim=(1, 2, 3)).sqrt())
+    score = K.amin((images[idx] - images_diffferent_classes).square().sum(dim=(1, 2, 3)).sqrt())
+    return score
 
 def single_compute_optimistic_radius_PGD(idx, images, targets, certificates, model, n_iter = 10):
     image = images[idx:idx+1]
@@ -89,6 +90,8 @@ class DecomonGroupSort2(DecomonLayer):
     increasing = True
     def get_affine_bounds(self, lower, upper):
         (W_low, b_low), (W_up, b_up) = affine_bound_groupsort_output_keras(lower, upper)
+        W_low = K.transpose(W_low,(0,2,1))
+        W_up = K.transpose(W_up,(0,2,1))
         return W_low, b_low, W_up, b_up
 
 def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
@@ -103,11 +106,12 @@ def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
         eps_current = (d_up+d_low)/2
         # print(eps_current)
         perturbation_domain = BallDomain(eps=eps_current, p=2)
-        decomon_model = clone(model, mapping_keras2decomon_classes={GroupSort2:DecomonGroupSort2}, final_ibp=True, final_affine=False, perturbation_domain=perturbation_domain)
-        upper = get_upper_noise(decomon_model,  image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
-        lower = get_lower_noise(decomon_model, image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
-
-        if (target==0 and upper<=0) or (target==1 and lower<=0):
+        decomon_model = clone(model, mapping_keras2decomon_classes={GroupSort2:DecomonGroupSort2}, final_ibp=True, final_affine=False, perturbation_domain=perturbation_domain, method='crown')
+        # upper = get_upper_noise(decomon_model,  image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
+        # lower = get_lower_noise(decomon_model, image.cpu().detach().numpy(), eps=eps_current, p=2)[:, 0]
+        # lower, upper = decomon_model.predict(image, eps=eps_current,p=2)
+        lower, upper = decomon_model.predict(image, verbose=0)
+        if (target==0 and upper<=0) or (target==1 and lower>=0):
             # print("working", target, upper, lower)
             eps_working = d_low = eps_current
         else:
