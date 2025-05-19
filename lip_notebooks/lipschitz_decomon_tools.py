@@ -8,20 +8,43 @@ def function_to_optimize(x, W, b, y, model, L=1):
     # print(output.shape)
     return output
 
-def function_to_optimize_all(x, W_list, b_list, y_list, model, L=1):
+def function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1):
     # x (4,)
     outputs = []
     for i in range(len(y_list)):
-        output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] +\
-          L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
-        outputs.append(output)
-        
-    # print(output.shape)
-    return np.min(outputs)
+        if label == 0:
+            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] +\
+                L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
+            outputs.append(output)
+            function = np.min(outputs)
+        else:
+            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] -\
+                L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
+            outputs.append(output)
+            function = np.max(outputs)    
+    return function
 
-def jac_function_to_optimize(x, W, b, L=1):
-    output = L/(2*np.sqrt(W@x+b))*W
-    # print(output.shape)
+def get_argm(x, label, W_list, b_list, y_list, model, L=1):
+    outputs = []
+    for i in range(len(y_list)):
+        if label == 0:
+            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] +\
+                L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
+            outputs.append(output)
+            argm = np.argmin(outputs)
+        else:
+            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] -\
+                L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
+            outputs.append(output)
+            argm = np.argmax(outputs)    
+    return argm
+
+def jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L=1):
+    arg = get_argm(x, label, W_list, b_list, y_list, model, L=1)
+    if label==0:    
+        output = (L*W_list[arg])/(2*np.sqrt(W_list[arg]@x+b_list[arg]))
+    else:
+        output = -(L*W_list[arg])/(2*np.sqrt(W_list[arg]@x+b_list[arg]))
     return output
 
 def square_backward_bounds(l, u, y):
@@ -55,7 +78,7 @@ def echantillonner_boule_l2_simple(x, epsilon):
 
   return y
 
-def get_local_maximum(x, eps, y_list, model, L=1):
+def get_local_maximum(x, label, eps, y_list, model, L=1):
     # # Define your convex function
     # def f(x):
     #     # Example: quadratic function
@@ -63,15 +86,15 @@ def get_local_maximum(x, eps, y_list, model, L=1):
     x_ball_center = x
     x_ball_center = np.asarray(x_ball_center, dtype=np.float64)
 
-    l = x-eps
-    u = x+eps
+    l = x_ball_center-eps
+    u = x_ball_center+eps
 
     W_list = []
     b_list = []
     for y_i in y_list:
-        W_1, b_1 = square_backward_bounds(l,u,y_i)
-        W_list.append(W_1)
-        b_list.append(b_1)
+        W, b = square_backward_bounds(l,u,y_i)
+        W_list.append(W)
+        b_list.append(b)
 
     # Define the constraint: ||x - x_centre||_2**2 <= eps**2
     def unit_ball_constraint(x, x_ball_center, eps):
@@ -97,14 +120,22 @@ def get_local_maximum(x, eps, y_list, model, L=1):
     })
 
     # Run the optimizer
-    result = minimize(fun=lambda x :-function_to_optimize(x, W_1, b_1, y, model, L),\
-                    jac= lambda x :-jac_function_to_optimize(x, W_1, b_1, L),\
-                    x0 = x_ball_center, method='SLSQP', constraints=constraints)
+    if label == 0:
+        result = minimize(fun=lambda x :-function_to_optimize_all(x, label, W_list, b_list, y_list, model, L),\
+        # jac= lambda x :-jac_function_to_optimize(x, W_1, b_1, L),\
+        x0 = x_ball_center, method='SLSQP', constraints=constraints)
+    else:
+        result = minimize(fun=lambda x :function_to_optimize_all(x, label, W_list, b_list, y_list, model, L),\
+        jac= lambda x :-jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L),\
+        x0 = x_ball_center, method='SLSQP', constraints=constraints)
     # result = minimize(fun=lambda x :-function_to_optimize(x, W_1, b_1, y), x0 = x_ball_center, method='SLSQP', constraints=constraints)
     # attention, le maximum est - result
     # Display results
     if result.success:
-        return result.x, result.fun
+        if label == 0:
+            return result.x, -result.fun
+        else:
+            return result.x, result.fun
     else:
         print("Optimization failed:", result.message)
         raise ValueError(result.message)

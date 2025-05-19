@@ -8,6 +8,7 @@ from lipschitz_custom_tools import affine_bound_groupsort_output_keras, affine_b
 from decomon.perturbation_domain import BallDomain
 from decomon import get_lower_noise, get_range_noise, get_upper_noise
 from deel.lip.activations import GroupSort, GroupSort2
+from lipschitz_decomon_tools import get_local_maximum
 
 # Compute 1-lip certificates
 def compute_certificate(images, model, L=1):    
@@ -112,6 +113,26 @@ def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
         # lower, upper = decomon_model.predict(image, eps=eps_current,p=2)
         lower, upper = decomon_model.predict(image, verbose=0)
         if (target==0 and upper<=0) or (target==1 and lower>=0):
+            # print("working", target, upper, lower)
+            eps_working = d_low = eps_current
+        else:
+            # print("not working", target, upper, lower)
+            d_up = eps_current
+    return eps_working
+
+def single_compute_relaxation_radius(idx, images, targets, model, y_list, n_iter = 10):
+    image = images[idx:idx+1].flatten().detach().cpu().numpy()
+    target = targets[idx:idx+1]
+    # certificate = certificates[idx:idx+1]
+    # We use dichotomy algorithm to fine the smallest optimistic radius
+    # We start from the closest point with different class
+    d_up = starting_point_dichotomy(idx, images, targets).detach().cpu().numpy()
+    eps_working = d_low = 0
+    for _ in range(n_iter):
+        eps_current = (d_up+d_low)/2
+
+        _, f_adv = get_local_maximum(image, target, eps_current, y_list, model)
+        if (target==0 and f_adv<=0) or (target==1 and f_adv>=0):
             # print("working", target, upper, lower)
             eps_working = d_low = eps_current
         else:
