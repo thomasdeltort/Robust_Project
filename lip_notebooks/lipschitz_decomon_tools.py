@@ -9,7 +9,7 @@ def function_to_optimize(x, W, b, y, model, L=1):
     return output
 
 def function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1):
-    # x (4,)
+    # function we want to optimize, combination of lipschitz constraints in all yi
     outputs = []
     for i in range(len(y_list)):
         if label == 0:
@@ -25,6 +25,7 @@ def function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1):
     return function
 
 def get_argm(x, label, W_list, b_list, y_list, model, L=1):
+    # get the argmin or agmax of the function to optimize all
     outputs = []
     for i in range(len(y_list)):
         if label == 0:
@@ -40,6 +41,7 @@ def get_argm(x, label, W_list, b_list, y_list, model, L=1):
     return argm
 
 def jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L=1):
+    # rajouter eps à la racine
     arg = get_argm(x, label, W_list, b_list, y_list, model, L=1)
     if label==0:    
         output = (L*W_list[arg])/(2*np.sqrt(W_list[arg]@x+b_list[arg]))
@@ -61,22 +63,24 @@ def square_backward_bounds(l, u, y):
 
 
 
-def echantillonner_boule_l2_simple(x, epsilon):
-  d = x.shape[0] # Dimension
+def echantillonner_boule_l2_simple(x, epsilon, uniform = False):
+    d = x.shape[0] # Dimension
 
-  # 1. Vecteur gaussien aléatoire (direction)
-  u = np.random.randn(d)
-  norm_u = np.linalg.norm(u)
+    # 1. Vecteur gaussien aléatoire (direction)
+    u = np.random.randn(d)
+    norm_u = np.linalg.norm(u)
 
-  
-  # 2. Distance radiale (avec échelle pour uniformité en volume)
-  s = np.random.rand() # Échantillon uniforme dans [0, 1)
-  r = epsilon * s 
+    
+    # 2. Distance radiale (avec échelle pour uniformité en volume)
+    s = np.random.rand() # Échantillon uniforme dans [0, 1)
+    if uniform:
+        r = epsilon * s**(1/d) 
+    else:
+        r = epsilon * s
+    # 3. Point final = centre + direction_normalisée * distance
+    y = x + r * (u / norm_u)
 
-  # 3. Point final = centre + direction_normalisée * distance
-  y = x + r * (u / norm_u)
-
-  return y
+    return y
 
 def get_local_maximum(x, label, eps, y_list, model, L=1):
     # # Define your convex function
@@ -86,8 +90,10 @@ def get_local_maximum(x, label, eps, y_list, model, L=1):
     x_ball_center = x
     x_ball_center = np.asarray(x_ball_center, dtype=np.float64)
 
-    l = x_ball_center-eps
-    u = x_ball_center+eps
+    # l = x_ball_center-eps
+    # u = x_ball_center+eps
+    l = x-eps
+    u = x+eps
 
     W_list = []
     b_list = []
@@ -122,11 +128,11 @@ def get_local_maximum(x, label, eps, y_list, model, L=1):
     # Run the optimizer
     if label == 0:
         result = minimize(fun=lambda x :-function_to_optimize_all(x, label, W_list, b_list, y_list, model, L),\
-        # jac= lambda x :-jac_function_to_optimize(x, W_1, b_1, L),\
+        jac= lambda x :-jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L),\
         x0 = x_ball_center, method='SLSQP', constraints=constraints)
     else:
         result = minimize(fun=lambda x :function_to_optimize_all(x, label, W_list, b_list, y_list, model, L),\
-        jac= lambda x :-jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L),\
+        jac= lambda x :jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L),\
         x0 = x_ball_center, method='SLSQP', constraints=constraints)
     # result = minimize(fun=lambda x :-function_to_optimize(x, W_1, b_1, y), x0 = x_ball_center, method='SLSQP', constraints=constraints)
     # attention, le maximum est - result
