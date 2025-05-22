@@ -8,7 +8,7 @@ from lipschitz_custom_tools import affine_bound_groupsort_output_keras, affine_b
 from decomon.perturbation_domain import BallDomain
 from decomon import get_lower_noise, get_range_noise, get_upper_noise
 from deel.lip.activations import GroupSort, GroupSort2
-from lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
+from lip_notebooks.LipschitzOptimization.lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
 
 # Compute 1-lip certificates
 def compute_certificate(images, model, L=1):    
