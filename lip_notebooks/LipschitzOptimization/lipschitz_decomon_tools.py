@@ -61,7 +61,17 @@ def square_backward_bounds(l, u, y):
     b = np.sum(-u*l) - W@y #scalar
     return W, np.array(b)[None]#(4,) & (1,)
 
+def echantillonner_boule_l2_simple_surbord(x, epsilon):
+    d = x.shape[0] # Dimension
 
+    # 1. Vecteur gaussien aléatoire (direction)
+    u = np.random.randn(d)
+    norm_u = np.linalg.norm(u)
+
+    # 3. Point final = centre + direction_normalisée * distance
+    y = x + epsilon * (u / norm_u)
+
+    return y
 
 def echantillonner_boule_l2_simple(x, epsilon, uniform = False):
     d = x.shape[0] # Dimension

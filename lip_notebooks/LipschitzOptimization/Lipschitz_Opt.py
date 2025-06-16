@@ -25,7 +25,7 @@ import pandas as pd
 from data_processing import load_data, select_data_for_radius_evaluation_MNIST08
 from radius_evaluation_tools import compute_binary_certificate, starting_point_dichotomy
 
-from lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
+from lip_notebooks.LipschitzOptimization.lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
 from radius_evaluation_tools import single_compute_relaxation_radius
 
 x_train, x_test, y_train, y_test, y_test_ord = load_data("MNIST08")
