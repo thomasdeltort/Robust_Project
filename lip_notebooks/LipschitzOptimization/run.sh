@@ -1,0 +1,1 @@
+python Lipschitz_Opt_MNIST08.py

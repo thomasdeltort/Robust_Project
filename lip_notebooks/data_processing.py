@@ -18,6 +18,8 @@ from keras.utils import to_categorical
 import numpy as np
 import keras.ops as K
 
+
+
 def prepare_data_MNIST08(x,y):
     # select items from the two selected classes
     mask = (y == 0) + (
@@ -157,3 +159,4 @@ def select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, model):
     images = K.convert_to_tensor(images_list)
     labels = K.convert_to_tensor(labels_list)
     return images, labels, idx_list 
+

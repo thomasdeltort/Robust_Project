@@ -1,0 +1,22 @@
+nohup: ignoring input
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/keras/src/models/functional.py:238: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_layer']
+Received: inputs=Tensor(shape=(1, 1, 28, 28))
+  warnings.warn(msg)
+0
+not working 4.261957168579102 -162.79982290472913
+not working 2.130978584289551 -78.37983178602528
+not working 1.0654892921447754 -36.127433236638716
+not working 0.5327446460723877 -15.053823215202119
+not working 0.26637232303619385 -4.488847442908392
+Optimization failed: Iteration limit reached
+Traceback (most recent call last):
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/Lipschitz_Opt_multiclass.py", line 61, in <module>
+    eps_working = single_compute_relaxation_radius_multiclass(i, images, labels, vanilla_model, nb_pts)
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../radius_evaluation_tools.py", line 163, in single_compute_relaxation_radius_multiclass
+    f_adv = get_local_maximum_multiclass(image, target, eps_current, y_list, model)
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../LipschitzOptimization/lipschitz_decomon_tools.py", line 200, in get_local_maximum_multiclass
+    _, max_one_vs_all =  get_local_maximum(x, 1, eps, y_list, difference_model, L=np.sqrt(2)*L)
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../LipschitzOptimization/lipschitz_decomon_tools.py", line 159, in get_local_maximum
+    raise ValueError(result.message)
+ValueError: Iteration limit reached

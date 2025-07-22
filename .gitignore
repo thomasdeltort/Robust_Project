@@ -3,3 +3,17 @@ lip_notebooks/__pycache__/
 auto_LiRPA/
 requirements-common.txt
 requirements-torch-cuda.txt
+lip_notebooks/LiResNet/
+lip_notebooks/notebooks_creation_models/Vgg_lip_final.pt
+lip_notebooks/notebooks_creation_models/Vgg_lip_final_van.pt
+lip_notebooks/notebooks_creation_models/Vgg_lip_multisteplr.pt
+lip_notebooks/notebooks_creation_models/Vgg_lip_multisteplr_van.pt
+lip_notebooks/data
+lip_notebooks/benchmark_dataset
+lip_notebooks/benchmark_dataset_2MOONS
+lip_notebooks/LiResNet/Liresnet_keras.keras
+lip_notebooks/notebooks_creation_models/VGG_keras.keras
+lip_models/
+lip_notebooks/notebooks_creation_models/data
+lip_notebooks/notebooks_creation_models/cifar10_lipschitz_model.pth
+liresnet

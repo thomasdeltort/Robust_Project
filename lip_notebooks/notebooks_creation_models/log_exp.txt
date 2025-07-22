@@ -1,0 +1,721 @@
+nohup: ignoring input
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/torchvision/transforms/v2/_deprecated.py:42: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.Output is equivalent up to float precision.
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    3, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    768, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    768, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: MultiplyByScalar()
+  warnings.warn(
+====================================================================================================
+Layer (type:depth-idx)                             Output Shape              Param #
+====================================================================================================
+Sequential                                         [1, 10]                   --
+├─LipBlock: 1-1                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-1             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-1                        --                        2,592
+│    └─BatchCentering: 2-2                         [1, 96, 32, 32]           96
+│    └─GroupSort2: 2-3                             [1, 96, 32, 32]           --
+│    └─MultiplyByScalar: 2-4                       [1, 96, 32, 32]           --
+├─LipBlock: 1-2                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-5             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-2                        --                        82,944
+│    └─BatchCentering: 2-6                         [1, 96, 32, 32]           96
+│    └─GroupSort2: 2-7                             [1, 96, 32, 32]           --
+│    └─MultiplyByScalar: 2-8                       [1, 96, 32, 32]           --
+├─LipBlock: 1-3                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-9             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-3                        --                        82,944
+│    └─BatchCentering: 2-10                        [1, 96, 32, 32]           96
+│    └─MultiplyByScalar: 2-11                      [1, 96, 32, 32]           --
+├─ScaledL2NormPool2d: 1-4                          [1, 96, 16, 16]           --
+├─LipBlock: 1-5                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-12            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-4                        --                        165,888
+│    └─BatchCentering: 2-13                        [1, 192, 16, 16]          192
+│    └─GroupSort2: 2-14                            [1, 192, 16, 16]          --
+│    └─MultiplyByScalar: 2-15                      [1, 192, 16, 16]          --
+├─LipBlock: 1-6                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-16            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-5                        --                        331,776
+│    └─BatchCentering: 2-17                        [1, 192, 16, 16]          192
+│    └─GroupSort2: 2-18                            [1, 192, 16, 16]          --
+│    └─MultiplyByScalar: 2-19                      [1, 192, 16, 16]          --
+├─LipBlock: 1-7                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-20            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-6                        --                        331,776
+│    └─BatchCentering: 2-21                        [1, 192, 16, 16]          192
+│    └─MultiplyByScalar: 2-22                      [1, 192, 16, 16]          --
+├─ScaledL2NormPool2d: 1-8                          [1, 192, 8, 8]            --
+├─LipBlock: 1-9                                    [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-23            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-7                        --                        663,552
+│    └─BatchCentering: 2-24                        [1, 384, 8, 8]            384
+│    └─GroupSort2: 2-25                            [1, 384, 8, 8]            --
+│    └─MultiplyByScalar: 2-26                      [1, 384, 8, 8]            --
+├─LipBlock: 1-10                                   [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-27            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-8                        --                        1,327,104
+│    └─BatchCentering: 2-28                        [1, 384, 8, 8]            384
+│    └─GroupSort2: 2-29                            [1, 384, 8, 8]            --
+│    └─MultiplyByScalar: 2-30                      [1, 384, 8, 8]            --
+├─LipBlock: 1-11                                   [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-31            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-9                        --                        1,327,104
+│    └─BatchCentering: 2-32                        [1, 384, 8, 8]            384
+│    └─MultiplyByScalar: 2-33                      [1, 384, 8, 8]            --
+├─ScaledL2NormPool2d: 1-12                         [1, 384, 4, 4]            --
+├─LipBlock: 1-13                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-34            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-10                       --                        2,654,208
+│    └─BatchCentering: 2-35                        [1, 768, 4, 4]            768
+│    └─GroupSort2: 2-36                            [1, 768, 4, 4]            --
+│    └─MultiplyByScalar: 2-37                      [1, 768, 4, 4]            --
+├─LipBlock: 1-14                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-38            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-11                       --                        5,308,416
+│    └─BatchCentering: 2-39                        [1, 768, 4, 4]            768
+│    └─GroupSort2: 2-40                            [1, 768, 4, 4]            --
+│    └─MultiplyByScalar: 2-41                      [1, 768, 4, 4]            --
+├─LipBlock: 1-15                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-42            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-12                       --                        5,308,416
+│    └─BatchCentering: 2-43                        [1, 768, 4, 4]            768
+│    └─MultiplyByScalar: 2-44                      [1, 768, 4, 4]            --
+├─ScaledAdaptativeL2NormPool2d: 1-16               [1, 768, 1, 1]            --
+├─Flatten: 1-17                                    [1, 768]                  --
+├─ParametrizedSpectralLinear: 1-18                 [1, 10]                   10
+│    └─ModuleDict: 2-45                            --                        --
+│    │    └─ParametrizationList: 3-13              [10, 768]                 7,680
+├─MultiplyByScalar: 1-19                           [1, 10]                   --
+====================================================================================================
+Total params: 17,598,730
+Trainable params: 17,598,730
+Non-trainable params: 0
+Total mult-adds (M): 0.00
+====================================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 4.42
+Params size (MB): 0.02
+Estimated Total Size (MB): 4.45
+====================================================================================================
+Epoch	Train Accuracy	Train Loss	Test Accuracy	Test Loss	Time
+BatchNorm statistics updated.
+1/50	21.65%		0.0190		32.27%		0.0185		237.49s
+BatchNorm statistics updated.
+2/50	35.83%		0.0177		48.83%		0.0156		240.74s
+BatchNorm statistics updated.
+3/50	48.02%		0.0154		61.76%		0.0123		247.46s
+BatchNorm statistics updated.
+4/50	57.34%		0.0132		68.94%		0.0102		253.03s
+BatchNorm statistics updated.
+5/50	63.88%		0.0117		75.00%		0.0087		254.74s
+BatchNorm statistics updated.
+6/50	68.50%		0.0105		79.92%		0.0073		246.23s
+BatchNorm statistics updated.
+7/50	71.17%		0.0096		81.83%		0.0065		231.65s
+BatchNorm statistics updated.
+8/50	73.72%		0.0089		83.56%		0.0059		232.69s
+BatchNorm statistics updated.
+9/50	75.32%		0.0084		84.55%		0.0056		231.16s
+BatchNorm statistics updated.
+10/50	76.80%		0.0080		85.01%		0.0053		231.77s
+BatchNorm statistics updated.
+11/50	78.09%		0.0076		86.00%		0.0051		232.31s
+BatchNorm statistics updated.
+12/50	78.81%		0.0073		86.54%		0.0049		232.17s
+BatchNorm statistics updated.
+13/50	79.83%		0.0070		87.19%		0.0047		232.50s
+BatchNorm statistics updated.
+14/50	80.47%		0.0068		87.48%		0.0045		231.32s
+BatchNorm statistics updated.
+15/50	81.07%		0.0066		87.73%		0.0044		229.91s
+BatchNorm statistics updated.
+16/50	81.50%		0.0064		87.96%		0.0043		230.38s
+BatchNorm statistics updated.
+17/50	82.25%		0.0063		88.28%		0.0042		230.59s
+BatchNorm statistics updated.
+18/50	82.80%		0.0061		88.78%		0.0041		230.04s
+BatchNorm statistics updated.
+19/50	83.46%		0.0059		89.15%		0.0040		229.71s
+BatchNorm statistics updated.
+20/50	83.66%		0.0058		89.45%		0.0039		230.46s
+BatchNorm statistics updated.
+21/50	84.43%		0.0056		89.54%		0.0039		230.13s
+BatchNorm statistics updated.
+22/50	84.61%		0.0055		89.49%		0.0038		228.95s
+BatchNorm statistics updated.
+23/50	84.90%		0.0054		89.75%		0.0038		229.01s
+BatchNorm statistics updated.
+24/50	85.14%		0.0053		89.96%		0.0037		228.99s
+BatchNorm statistics updated.
+25/50	85.60%		0.0052		90.04%		0.0036		229.96s
+BatchNorm statistics updated.
+26/50	85.70%		0.0051		90.20%		0.0036		230.05s
+BatchNorm statistics updated.
+27/50	85.96%		0.0051		90.11%		0.0036		228.71s
+BatchNorm statistics updated.
+28/50	86.29%		0.0049		90.05%		0.0036		230.24s
+BatchNorm statistics updated.
+29/50	86.69%		0.0048		90.12%		0.0035		230.50s
+BatchNorm statistics updated.
+30/50	86.91%		0.0048		90.26%		0.0035		230.36s
+BatchNorm statistics updated.
+31/50	86.82%		0.0048		90.32%		0.0035		229.72s
+BatchNorm statistics updated.
+32/50	87.25%		0.0047		90.27%		0.0034		229.33s
+BatchNorm statistics updated.
+33/50	87.49%		0.0046		90.51%		0.0034		229.71s
+BatchNorm statistics updated.
+34/50	87.55%		0.0045		90.74%		0.0034		229.85s
+BatchNorm statistics updated.
+35/50	87.72%		0.0045		90.72%		0.0034		229.72s
+BatchNorm statistics updated.
+36/50	88.25%		0.0043		90.66%		0.0033		229.60s
+BatchNorm statistics updated.
+37/50	88.32%		0.0043		90.66%		0.0034		229.86s
+BatchNorm statistics updated.
+38/50	88.53%		0.0042		90.87%		0.0033		230.08s
+BatchNorm statistics updated.
+39/50	88.45%		0.0042		90.93%		0.0033		229.62s
+BatchNorm statistics updated.
+40/50	88.83%		0.0041		90.98%		0.0033		229.84s
+BatchNorm statistics updated.
+41/50	88.77%		0.0041		91.00%		0.0033		229.88s
+BatchNorm statistics updated.
+42/50	89.15%		0.0040		91.15%		0.0033		230.50s
+BatchNorm statistics updated.
+43/50	89.21%		0.0040		90.90%		0.0033		228.52s
+BatchNorm statistics updated.
+44/50	89.18%		0.0040		91.04%		0.0033		228.38s
+BatchNorm statistics updated.
+45/50	89.26%		0.0039		91.13%		0.0032		229.25s
+BatchNorm statistics updated.
+46/50	89.51%		0.0039		91.27%		0.0032		229.55s
+BatchNorm statistics updated.
+47/50	89.80%		0.0038		91.35%		0.0032		230.17s
+BatchNorm statistics updated.
+48/50	90.05%		0.0037		91.48%		0.0032		229.43s
+BatchNorm statistics updated.
+49/50	89.96%		0.0037		91.50%		0.0032		229.84s
+BatchNorm statistics updated.
+50/50	90.18%		0.0037		91.55%		0.0032		229.72s
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/torchvision/transforms/v2/_deprecated.py:42: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.Output is equivalent up to float precision.
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    3, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    96, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    192, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    384, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    768, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (activation): GroupSort2()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: LipBlock(
+  (conv): ParametrizedSpectralConv2d(
+    768, 768, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False, padding_mode=reflect
+    (parametrizations): ModuleDict(
+      (weight): ParametrizationList(
+        (0): _SpectralNorm()
+        (1): _BjorckNorm()
+        (2): _LConvNorm()
+      )
+    )
+  )
+  (norm): BatchCentering()
+  (scalar): MultiplyByScalar()
+)
+  warnings.warn(
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/deel/torchlip/modules/module.py:159: UserWarning: Sequential model contains a layer which is not a Lipschitz layer: MultiplyByScalar()
+  warnings.warn(
+====================================================================================================
+Layer (type:depth-idx)                             Output Shape              Param #
+====================================================================================================
+Sequential                                         [1, 10]                   --
+├─LipBlock: 1-1                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-1             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-1                        --                        2,592
+│    └─BatchCentering: 2-2                         [1, 96, 32, 32]           96
+│    └─GroupSort2: 2-3                             [1, 96, 32, 32]           --
+│    └─MultiplyByScalar: 2-4                       [1, 96, 32, 32]           --
+├─LipBlock: 1-2                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-5             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-2                        --                        82,944
+│    └─BatchCentering: 2-6                         [1, 96, 32, 32]           96
+│    └─GroupSort2: 2-7                             [1, 96, 32, 32]           --
+│    └─MultiplyByScalar: 2-8                       [1, 96, 32, 32]           --
+├─LipBlock: 1-3                                    [1, 96, 32, 32]           --
+│    └─ParametrizedSpectralConv2d: 2-9             [1, 96, 32, 32]           --
+│    │    └─ModuleDict: 3-3                        --                        82,944
+│    └─BatchCentering: 2-10                        [1, 96, 32, 32]           96
+│    └─MultiplyByScalar: 2-11                      [1, 96, 32, 32]           --
+├─ScaledL2NormPool2d: 1-4                          [1, 96, 16, 16]           --
+├─LipBlock: 1-5                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-12            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-4                        --                        165,888
+│    └─BatchCentering: 2-13                        [1, 192, 16, 16]          192
+│    └─GroupSort2: 2-14                            [1, 192, 16, 16]          --
+│    └─MultiplyByScalar: 2-15                      [1, 192, 16, 16]          --
+├─LipBlock: 1-6                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-16            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-5                        --                        331,776
+│    └─BatchCentering: 2-17                        [1, 192, 16, 16]          192
+│    └─GroupSort2: 2-18                            [1, 192, 16, 16]          --
+│    └─MultiplyByScalar: 2-19                      [1, 192, 16, 16]          --
+├─LipBlock: 1-7                                    [1, 192, 16, 16]          --
+│    └─ParametrizedSpectralConv2d: 2-20            [1, 192, 16, 16]          --
+│    │    └─ModuleDict: 3-6                        --                        331,776
+│    └─BatchCentering: 2-21                        [1, 192, 16, 16]          192
+│    └─MultiplyByScalar: 2-22                      [1, 192, 16, 16]          --
+├─ScaledL2NormPool2d: 1-8                          [1, 192, 8, 8]            --
+├─LipBlock: 1-9                                    [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-23            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-7                        --                        663,552
+│    └─BatchCentering: 2-24                        [1, 384, 8, 8]            384
+│    └─GroupSort2: 2-25                            [1, 384, 8, 8]            --
+│    └─MultiplyByScalar: 2-26                      [1, 384, 8, 8]            --
+├─LipBlock: 1-10                                   [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-27            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-8                        --                        1,327,104
+│    └─BatchCentering: 2-28                        [1, 384, 8, 8]            384
+│    └─GroupSort2: 2-29                            [1, 384, 8, 8]            --
+│    └─MultiplyByScalar: 2-30                      [1, 384, 8, 8]            --
+├─LipBlock: 1-11                                   [1, 384, 8, 8]            --
+│    └─ParametrizedSpectralConv2d: 2-31            [1, 384, 8, 8]            --
+│    │    └─ModuleDict: 3-9                        --                        1,327,104
+│    └─BatchCentering: 2-32                        [1, 384, 8, 8]            384
+│    └─MultiplyByScalar: 2-33                      [1, 384, 8, 8]            --
+├─ScaledL2NormPool2d: 1-12                         [1, 384, 4, 4]            --
+├─LipBlock: 1-13                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-34            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-10                       --                        2,654,208
+│    └─BatchCentering: 2-35                        [1, 768, 4, 4]            768
+│    └─GroupSort2: 2-36                            [1, 768, 4, 4]            --
+│    └─MultiplyByScalar: 2-37                      [1, 768, 4, 4]            --
+├─LipBlock: 1-14                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-38            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-11                       --                        5,308,416
+│    └─BatchCentering: 2-39                        [1, 768, 4, 4]            768
+│    └─GroupSort2: 2-40                            [1, 768, 4, 4]            --
+│    └─MultiplyByScalar: 2-41                      [1, 768, 4, 4]            --
+├─LipBlock: 1-15                                   [1, 768, 4, 4]            --
+│    └─ParametrizedSpectralConv2d: 2-42            [1, 768, 4, 4]            --
+│    │    └─ModuleDict: 3-12                       --                        5,308,416
+│    └─BatchCentering: 2-43                        [1, 768, 4, 4]            768
+│    └─MultiplyByScalar: 2-44                      [1, 768, 4, 4]            --
+├─ScaledAdaptativeL2NormPool2d: 1-16               [1, 768, 1, 1]            --
+├─Flatten: 1-17                                    [1, 768]                  --
+├─ParametrizedSpectralLinear: 1-18                 [1, 10]                   10
+│    └─ModuleDict: 2-45                            --                        --
+│    │    └─ParametrizationList: 3-13              [10, 768]                 7,680
+├─MultiplyByScalar: 1-19                           [1, 10]                   --
+====================================================================================================
+Total params: 17,598,730
+Trainable params: 17,598,730
+Non-trainable params: 0
+Total mult-adds (M): 0.00
+====================================================================================================
+Input size (MB): 0.01
+Forward/backward pass size (MB): 4.42
+Params size (MB): 0.02
+Estimated Total Size (MB): 4.45
+====================================================================================================
+Epoch	Train Accuracy	Train Loss	Test Accuracy	Test Loss	Time
+1/50	17.65%		0.0197		10.00%		0.2892		137.93s
+2/50	19.13%		0.0202		12.01%		0.0847		135.04s
+3/50	21.65%		0.0200		8.61%		0.0641		133.45s
+4/50	26.29%		0.0194		8.60%		0.0393		133.80s
+5/50	33.38%		0.0184		10.29%		0.0582		133.35s
+6/50	41.48%		0.0169		23.51%		0.0228		133.77s
+7/50	48.08%		0.0156		30.08%		0.0231		133.27s
+8/50	53.42%		0.0144		46.19%		0.0172		134.05s
+9/50	57.58%		0.0134		40.52%		0.0188		133.66s
+10/50	60.86%		0.0126		51.47%		0.0161		133.53s
+11/50	63.70%		0.0119		57.39%		0.0143		133.88s
+12/50	65.65%		0.0113		58.67%		0.0136		136.01s
+13/50	66.92%		0.0110		68.52%		0.0106		136.82s
+14/50	68.54%		0.0105		63.65%		0.0122		136.04s
+15/50	69.58%		0.0102		63.04%		0.0129		137.15s
+16/50	70.73%		0.0099		62.36%		0.0126		136.35s
+17/50	71.91%		0.0095		73.44%		0.0097		137.31s
+18/50	72.80%		0.0093		63.00%		0.0130		137.32s
+19/50	73.14%		0.0090		70.68%		0.0101		137.63s
+20/50	74.05%		0.0089		74.82%		0.0090		136.89s
+21/50	77.53%		0.0077		84.77%		0.0056		137.32s
+22/50	79.06%		0.0072		85.46%		0.0053		137.48s
+23/50	79.75%		0.0071		85.53%		0.0052		136.77s
+24/50	80.23%		0.0069		86.16%		0.0050		137.20s
+25/50	80.30%		0.0068		86.57%		0.0049		136.27s
+26/50	80.62%		0.0067		86.97%		0.0047		136.85s
+27/50	81.01%		0.0066		86.89%		0.0048		136.84s
+28/50	81.52%		0.0065		87.02%		0.0047		136.98s
+29/50	81.87%		0.0064		86.90%		0.0047		136.48s
+30/50	81.88%		0.0064		87.40%		0.0046		137.68s
+31/50	82.14%		0.0063		86.94%		0.0047		136.94s
+32/50	81.97%		0.0063		87.52%		0.0046		137.90s
+33/50	82.59%		0.0062		87.56%		0.0046		137.74s
+34/50	82.53%		0.0061		86.56%		0.0048		137.59s
+35/50	82.66%		0.0061		87.45%		0.0046		136.84s
+36/50	82.65%		0.0061		87.61%		0.0044		136.53s
+37/50	82.94%		0.0060		87.39%		0.0045		136.92s
+38/50	83.21%		0.0060		87.89%		0.0045		136.36s
+39/50	83.39%		0.0059		87.62%		0.0045		137.29s
+40/50	83.44%		0.0059		87.75%		0.0045		136.33s
+41/50	83.85%		0.0058		88.31%		0.0042		136.69s
+42/50	84.02%		0.0057		88.26%		0.0042		136.91s
+43/50	84.06%		0.0057		88.45%		0.0042		136.71s
+44/50	84.25%		0.0056		88.42%		0.0042		137.30s
+45/50	84.23%		0.0057		88.47%		0.0042		137.51s
+46/50	84.13%		0.0056		88.41%		0.0042		137.04s
+47/50	84.17%		0.0056		88.40%		0.0042		136.83s
+48/50	84.14%		0.0056		88.46%		0.0042		136.99s
+49/50	84.24%		0.0056		88.58%		0.0042		137.05s
+50/50	84.31%		0.0056		88.52%		0.0042		137.99s

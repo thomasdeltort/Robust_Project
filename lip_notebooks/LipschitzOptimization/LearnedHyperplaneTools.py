@@ -3,7 +3,7 @@ import keras.ops as K
 import numpy as np
 from lipschitz_decomon_tools import  echantillonner_boule_l2_simple, echantillonner_boule_l2_simple_surbord
 from scipy.optimize import minimize
-
+from keras import layers
 
 # BATCH_SIZE = 128
 EPOCHS = 300  # Nombre d'époques (ajustable)
@@ -134,7 +134,7 @@ def function_to_optimize_all(z, label, x_0, y_list, eps, optimization, model, n_
     W_list, b_list = generating_hyperplans(x_0, y_list, eps, optimization, n_data, n_epochs)
     return f_all(z, W_list, b_list, y_list, label, model, L)
 
-def get_local_maximum(x, label, eps, y_list, model, optimization=False, L=1, n_data=2048, n_epochs=10, lr=10e-3, steps_per_epochs=50):
+def get_local_maximum_Learned_Hyperplane(x, label, eps, y_list, model, optimization=False, L=1, n_data=2048, n_epochs=10, lr=10e-3, steps_per_epochs=50):
 
     # # Define your convex function
     # def f(x):

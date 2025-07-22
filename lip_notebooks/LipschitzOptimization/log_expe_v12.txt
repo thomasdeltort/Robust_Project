@@ -1,0 +1,20 @@
+nohup: ignoring input
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/keras/src/saving/saving_lib.py:802: UserWarning: Skipping variable loading for optimizer 'adam', because it has 12 variables whereas the saved optimizer has 2 variables. 
+  saveable.load_own_variables(weights_store.get(inner_path))
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/keras/src/saving/saving_lib.py:802: UserWarning: Skipping variable loading for optimizer 'adam', because it has 14 variables whereas the saved optimizer has 2 variables. 
+  saveable.load_own_variables(weights_store.get(inner_path))
+/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../LipschitzOptimization/lipschitz_decomon_tools.py:21: RuntimeWarning: invalid value encountered in sqrt
+  L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
+0
+empirical max values [127.05961930384714, 127.05963675902606, 127.06215318856036]
+empirical min values [127.04332477260795, 127.04353130049265, 127.04373463810597]
+
+Aucun historique de la fonction objectif n'a été enregistré. Le solveur a peut-être convergé en une seule itération ou le callback n'a pas été appelé.
+Traceback (most recent call last):
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/Lipschitz_Opt_MNIST08.py", line 74, in <module>
+    eps_working = single_compute_relaxation_radius(i, images, labels, model, nb_pts)
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../radius_evaluation_tools.py", line 138, in single_compute_relaxation_radius
+    _, f_adv = get_local_maximum(image, target, eps_current, y_list, model)
+  File "/home/aws_install/robustess_project/lip_notebooks/LipschitzOptimization/../LipschitzOptimization/lipschitz_decomon_tools.py", line 194, in get_local_maximum
+    return result.x, -result.fun, history_fun_values
+UnboundLocalError: local variable 'history_fun_values' referenced before assignment

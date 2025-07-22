@@ -22,11 +22,16 @@ import numpy as np
 import decomon
 import pandas as pd
 
+from lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
+
+import sys
+sys.path.append('..')
+
+from radius_evaluation_tools import single_compute_relaxation_radius
+
+
 from data_processing import load_data, select_data_for_radius_evaluation_MNIST08
 from radius_evaluation_tools import compute_binary_certificate, starting_point_dichotomy
-
-from lip_notebooks.LipschitzOptimization.lipschitz_decomon_tools import get_local_maximum, echantillonner_boule_l2_simple
-from radius_evaluation_tools import single_compute_relaxation_radius
 
 x_train, x_test, y_train, y_test, y_test_ord = load_data("MNIST08")
 
@@ -58,13 +63,13 @@ total_points = images.shape[0]
 # Initialize the CSV file with column headers
 input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.csv"
 input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.pkl"
-output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation.csv"
-output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation.pkl"
+output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation_100pts.csv"
+output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation_100pts.pkl"
 
-nb_pts = 2
+nb_pts = 100
 
 list_eps = []
-for i in range(total_points):
+for i in range(total_points): 
     print(i)
     eps_working = single_compute_relaxation_radius(i, images, labels, model, nb_pts)
     list_eps.append(eps_working)

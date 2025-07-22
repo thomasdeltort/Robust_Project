@@ -1,0 +1,5 @@
+training:
+  batch_size: 128
+  n_epochs: 50
+  loss_temp: 1000
+  lr: 0.001
