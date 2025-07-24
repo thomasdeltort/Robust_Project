@@ -20,14 +20,21 @@ def function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1):
             output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] +\
                 L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
             outputs.append(output)
-            function = np.min(outputs)
+            # function = np.min(outputs)
             # concave
         else:
             output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] -\
                 L*np.sqrt(W_list[i]@x+b_list[i]) #scalar
             outputs.append(output)
-            function = np.max(outputs)    
+            # function = np.max(outputs)    
             # convexe
+    # cp.min ou cp.max doit être appliqué HORS de la boucle
+    if label == 0:
+        # min(min(concaves)) -> min(concave) -> NON CONVEXE
+        function = np.min(outputs) 
+    else:
+        # min(max(convexes)) -> min(convexe) -> CONVEXE
+        function = np.max(outputs)
     return function
 
 def get_argm(x, label, W_list, b_list, y_list, model, L=1):

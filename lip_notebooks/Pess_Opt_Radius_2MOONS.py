@@ -113,12 +113,6 @@ def load_models(device):
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    print("loading data :")
-    # # Load configuration file
-    # with open('./notebooks_creation_models/config.yaml', 'r') as f:
-    #     cfg = yaml.safe_load(f)
-    # _, test_loader = load_cifar10(cfg)
-
     print("loading model :")
     model, wrapped_model = load_models(device)
     model.load_state_dict(torch.load("./../lip_models/FC_2MOONS_Lip.pt", weights_only=False))
@@ -127,9 +121,7 @@ if __name__ == "__main__":
     wrapped_model.eval()
 
     print("Loading Sample :")
-    # images, labels = select_data_for_radius_evaluation(test_loader, test_loader.dataset, model, schedulefree=True)
-    # images = images.to(device)
-    # labels = labels.to(device)
+   
     # Define the directory and file paths
     output_dir = "./benchmark_dataset_2MOONS"
     images_path = os.path.join(output_dir, "images.pkl")
@@ -171,32 +163,40 @@ if __name__ == "__main__":
         # we have to send labels from {-1,1} to {0,1}
         labels_01 = (labels/2 + 0.5).long()
 
-        eps_pgd, adv_image = single_compute_optimistic_radius_PGD(i, images.unsqueeze(-1).unsqueeze(-1), labels_01, lip_radius, wrapped_model, n_iter=10)
+        eps_pgd, adv_image = single_compute_optimistic_radius_PGD(i, images.unsqueeze(-1).unsqueeze(-1), labels_01, lip_radius, wrapped_model, n_iter=10, return_attack=True)
         # eps_aa = single_compute_optimistic_radius_AA_binary(i,images, labels, lip_radius, model, n_iter=10)
         print("Point ", i, "attaques trouvées :", eps_pgd)
         # Create a row
-        # row = {
-        #     "Index": i,
-        #     "Label_GT": (labels[i]/2 + 0.5).long().item(),
-        #     "Predicted_Label": np.argmax(model(images[i:i+1]).detach().cpu().numpy(), axis=1)[0],
-        #     "Lipschitz_Constant": 1.0,
-        #     "Robust_Epsilon": lip_radius[i].detach().cpu().numpy(),
-        #     "Adv_Epsilon_AA": 0.0,
-        #     "Adv_Epsilon_PGD": eps_pgd.item()}
+        row = {
+            "Index": i,
+            "Label_GT": (labels[i]/2 + 0.5).long().item(),
+            "Predicted_Label": np.argmax(model(images[i:i+1]).detach().cpu().numpy(), axis=1)[0],
+            "Lipschitz_Constant": 1.0,
+            "Robust_Epsilon": lip_radius[i].detach().cpu().numpy(),
+            "Adv_Epsilon_AA": 0.0,
+            "Adv_Epsilon_PGD": eps_pgd.item()}
 
-        adv_images.append(adv_image)
-        list_eps_pgd.append(eps_pgd)
+        adv_images.append(adv_image.flatten().cpu().detach().numpy())
+        list_eps_pgd.append(eps_pgd.cpu().detach().numpy())
 
-        # # Append to CSV file without rewriting the header
-        # pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
+        # Append to CSV file without rewriting the header
+        pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
         
-        # # Append to the list for Pickle
-        # df_list.append(row)
+        # Append to the list for Pickle
+        df_list.append(row)
         
-        # # Save to Pickle at each iteration
-        # pd.DataFrame(df_list).to_pickle(pkl_path)
+        # Save to Pickle at each iteration
+        pd.DataFrame(df_list).to_pickle(pkl_path)
     adv_images = np.array(adv_images)
     list_eps_pgd = np.array(list_eps_pgd)
 
     tuple_data = (lip_radius, list_eps_pgd, adv_images, images)
-    print(tuple_data)
+
+    print('Saving File :')
+    filename = 'tuple_expe_2MOONS'
+    with open(filename, 'wb') as f:
+        # Utiliser pickle.dump pour enregistrer le tuple dans le fichier
+        pickle.dump(tuple_data, f)
+    print('Saved.')
+
+    
