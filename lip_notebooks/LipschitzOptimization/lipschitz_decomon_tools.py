@@ -157,10 +157,10 @@ def get_local_maximum(x, label, eps, y_list, model, L=1):
         'args': args_contrainte
     })
 
-    list_test = [echantillonner_boule_l2_simple(x_ball_center, eps) for _ in range(1000)]
-    list_exp = [function_to_optimize_all(x_i, label, W_list, b_list, y_list, model, L) for x_i in list_test]
-    print("empirical max values", sorted(list_exp)[-3:])
-    print("empirical min values", sorted(list_exp)[:3])
+    # list_test = [echantillonner_boule_l2_simple(x_ball_center, eps) for _ in range(1000)]
+    # list_exp = [function_to_optimize_all(x_i, label, W_list, b_list, y_list, model, L) for x_i in list_test]
+    # print("empirical max values", sorted(list_exp)[-3:])
+    # print("empirical min values", sorted(list_exp)[:3])
 
 
     # Run the optimizer
@@ -176,7 +176,7 @@ def get_local_maximum(x, label, eps, y_list, model, L=1):
         #tester avec maxiter 1, 2, 3, 4
         result = minimize(fun=lambda x :function_to_optimize_all(x, label, W_list, b_list, y_list, model, L),\
         jac= lambda x :jac_function_to_optimize(x, label, W_list, b_list, y_list, model, L),\
-        x0 = x_ball_center, method='SLSQP', constraints=constraints, options=options)
+        x0 = x_ball_center, method='SLSQP', constraints=constraints)
         # , callback=my_callback
     # result = minimize(fun=lambda x :-function_to_optimize(x, W_1, b_1, y), x0 = x_ball_center, method='SLSQP', constraints=constraints)
     # attention, le maximum est - result
