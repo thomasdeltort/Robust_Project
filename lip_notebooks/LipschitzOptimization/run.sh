@@ -1,1 +1,3 @@
 python Lipschitz_Opt_MNIST08.py
+python Lipschitz_Opt_MNIST.py
+python Lipschitz_Opt_FMNIST.py

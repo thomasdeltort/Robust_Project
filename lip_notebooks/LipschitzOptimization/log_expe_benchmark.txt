@@ -1,0 +1,1856 @@
+nohup: ignoring input
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/keras/src/saving/saving_lib.py:802: UserWarning: Skipping variable loading for optimizer 'adam', because it has 12 variables whereas the saved optimizer has 2 variables. 
+  saveable.load_own_variables(weights_store.get(inner_path))
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/keras/src/saving/saving_lib.py:802: UserWarning: Skipping variable loading for optimizer 'adam', because it has 14 variables whereas the saved optimizer has 2 variables. 
+  saveable.load_own_variables(weights_store.get(inner_path))
+/home/aws_install/miniconda3/envs/k3torchenv/lib/python3.10/site-packages/cvxpy/problems/problem.py:1510: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  warnings.warn(
+0
+Status :  optimal_inaccurate
+point  0 eps working :  0
+Status :  optimal_inaccurate
+point  0 eps working :  0
+Status :  optimal_inaccurate
+point  0 eps working :  0
+Status :  optimal_inaccurate
+point  0 eps working :  0
+Status :  optimal
+point  0 eps working :  0
+Status :  optimal
+point  0 eps working :  0
+Status :  optimal
+point  0 eps working :  0
+Status :  optimal
+point  0 eps working :  0.035961199551820755
+Status :  optimal
+point  0 eps working :  0.05394179932773113
+Status :  optimal
+point  0 eps working :  0.05394179932773113
+1
+Status :  optimal_inaccurate
+point  1 eps working :  0
+Status :  optimal_inaccurate
+point  1 eps working :  0
+Status :  optimal_inaccurate
+point  1 eps working :  0
+Status :  optimal
+point  1 eps working :  0
+Status :  optimal
+point  1 eps working :  0
+Status :  optimal
+point  1 eps working :  0
+Status :  optimal
+point  1 eps working :  0.07250087708234787
+Status :  optimal
+point  1 eps working :  0.1087513156235218
+Status :  optimal
+point  1 eps working :  0.1087513156235218
+Status :  optimal
+point  1 eps working :  0.1087513156235218
+2
+Status :  optimal_inaccurate
+point  2 eps working :  0
+Status :  optimal_inaccurate
+point  2 eps working :  0
+Status :  optimal_inaccurate
+point  2 eps working :  0
+Status :  optimal
+point  2 eps working :  0
+Status :  optimal
+point  2 eps working :  0
+Status :  optimal
+point  2 eps working :  0
+Status :  optimal
+point  2 eps working :  0.0670207217335701
+Status :  optimal
+point  2 eps working :  0.10053108260035515
+Status :  optimal
+point  2 eps working :  0.10053108260035515
+Status :  optimal
+point  2 eps working :  0.10053108260035515
+3
+Status :  optimal_inaccurate
+point  3 eps working :  0
+Status :  optimal_inaccurate
+point  3 eps working :  0
+Status :  optimal_inaccurate
+point  3 eps working :  0
+Status :  optimal
+point  3 eps working :  0
+Status :  optimal
+point  3 eps working :  0
+Status :  optimal
+point  3 eps working :  0.15503272414207458
+Status :  optimal
+point  3 eps working :  0.15503272414207458
+Status :  optimal
+point  3 eps working :  0.15503272414207458
+Status :  optimal
+point  3 eps working :  0.15503272414207458
+Status :  optimal
+point  3 eps working :  0.16472226940095425
+4
+Status :  optimal_inaccurate
+point  4 eps working :  0
+Status :  optimal_inaccurate
+point  4 eps working :  0
+Status :  optimal_inaccurate
+point  4 eps working :  0
+Status :  optimal
+point  4 eps working :  0
+Status :  optimal
+point  4 eps working :  0
+Status :  optimal
+point  4 eps working :  0.13114404678344727
+Status :  optimal
+point  4 eps working :  0.13114404678344727
+Status :  optimal
+point  4 eps working :  0.13114404678344727
+Status :  optimal
+point  4 eps working :  0.14753705263137817
+Status :  optimal
+point  4 eps working :  0.14753705263137817
+5
+Status :  optimal_inaccurate
+point  5 eps working :  0
+Status :  optimal_inaccurate
+point  5 eps working :  0
+Status :  optimal_inaccurate
+point  5 eps working :  0
+Status :  optimal
+point  5 eps working :  0
+Status :  optimal
+point  5 eps working :  0
+Status :  optimal
+point  5 eps working :  0.13230833411216736
+Status :  optimal
+point  5 eps working :  0.13230833411216736
+Status :  optimal
+point  5 eps working :  0.13230833411216736
+Status :  optimal
+point  5 eps working :  0.13230833411216736
+Status :  optimal
+point  5 eps working :  0.13230833411216736
+6
+Status :  optimal_inaccurate
+point  6 eps working :  0
+Status :  optimal_inaccurate
+point  6 eps working :  0
+Status :  optimal_inaccurate
+point  6 eps working :  0
+Status :  optimal
+point  6 eps working :  0
+Status :  optimal
+point  6 eps working :  0
+Status :  optimal
+point  6 eps working :  0
+Status :  optimal
+point  6 eps working :  0.06020788103342056
+Status :  optimal
+point  6 eps working :  0.09031182155013084
+Status :  optimal
+point  6 eps working :  0.10536379180848598
+Status :  optimal
+point  6 eps working :  0.10536379180848598
+7
+Status :  optimal_inaccurate
+point  7 eps working :  0
+Status :  optimal_inaccurate
+point  7 eps working :  0
+Status :  optimal_inaccurate
+point  7 eps working :  0
+Status :  optimal
+point  7 eps working :  0
+Status :  optimal
+point  7 eps working :  0
+Status :  optimal
+point  7 eps working :  0.13747209310531616
+Status :  optimal
+point  7 eps working :  0.13747209310531616
+Status :  optimal
+point  7 eps working :  0.13747209310531616
+Status :  optimal
+point  7 eps working :  0.13747209310531616
+Status :  optimal
+point  7 eps working :  0.14606409892439842
+8
+Status :  optimal_inaccurate
+point  8 eps working :  0
+Status :  optimal_inaccurate
+point  8 eps working :  0
+Status :  optimal
+point  8 eps working :  0
+Status :  optimal
+point  8 eps working :  0
+Status :  optimal
+point  8 eps working :  0
+Status :  optimal
+point  8 eps working :  0.13877061009407043
+Status :  optimal
+point  8 eps working :  0.13877061009407043
+Status :  optimal
+point  8 eps working :  0.13877061009407043
+Status :  optimal
+point  8 eps working :  0.13877061009407043
+Status :  optimal
+point  8 eps working :  0.14744377322494984
+9
+Status :  optimal_inaccurate
+point  9 eps working :  0
+Status :  optimal_inaccurate
+point  9 eps working :  0
+Status :  optimal_inaccurate
+point  9 eps working :  0
+Status :  optimal
+point  9 eps working :  0
+Status :  optimal
+point  9 eps working :  0
+Status :  optimal
+point  9 eps working :  0
+Status :  optimal
+point  9 eps working :  0.057261962443590164
+Status :  optimal
+point  9 eps working :  0.057261962443590164
+Status :  optimal
+point  9 eps working :  0.0715774530544877
+Status :  optimal
+point  9 eps working :  0.07873519835993648
+10
+Status :  optimal_inaccurate
+point  10 eps working :  0
+Status :  optimal_inaccurate
+point  10 eps working :  0
+Status :  optimal_inaccurate
+point  10 eps working :  0
+Status :  optimal
+point  10 eps working :  0
+Status :  optimal
+point  10 eps working :  0
+Status :  optimal
+point  10 eps working :  0.1453559249639511
+Status :  optimal
+point  10 eps working :  0.1453559249639511
+Status :  optimal
+point  10 eps working :  0.1453559249639511
+Status :  optimal
+point  10 eps working :  0.1453559249639511
+Status :  optimal
+point  10 eps working :  0.15444067027419806
+11
+Status :  optimal_inaccurate
+point  11 eps working :  0
+Status :  optimal_inaccurate
+point  11 eps working :  0
+Status :  optimal_inaccurate
+point  11 eps working :  0
+Status :  optimal
+point  11 eps working :  0
+Status :  optimal
+point  11 eps working :  0
+Status :  optimal
+point  11 eps working :  0.1329801380634308
+Status :  optimal
+point  11 eps working :  0.1329801380634308
+Status :  optimal
+point  11 eps working :  0.1329801380634308
+Status :  optimal
+point  11 eps working :  0.1329801380634308
+Status :  optimal
+point  11 eps working :  0.1329801380634308
+12
+Status :  optimal_inaccurate
+point  12 eps working :  0
+Status :  optimal_inaccurate
+point  12 eps working :  0
+Status :  optimal_inaccurate
+point  12 eps working :  0
+Status :  optimal
+point  12 eps working :  0
+Status :  optimal
+point  12 eps working :  0
+Status :  optimal
+point  12 eps working :  0
+Status :  optimal
+point  12 eps working :  0.0732525885105133
+Status :  optimal
+point  12 eps working :  0.10987888276576996
+Status :  optimal
+point  12 eps working :  0.12819202989339828
+Status :  optimal
+point  12 eps working :  0.12819202989339828
+13
+Status :  optimal_inaccurate
+point  13 eps working :  0
+Status :  optimal_inaccurate
+point  13 eps working :  0
+Status :  optimal_inaccurate
+point  13 eps working :  0
+Status :  optimal
+point  13 eps working :  0
+Status :  optimal
+point  13 eps working :  0
+Status :  optimal
+point  13 eps working :  0
+Status :  optimal
+point  13 eps working :  0.0705227479338646
+Status :  optimal
+point  13 eps working :  0.0705227479338646
+Status :  optimal
+point  13 eps working :  0.08815343491733074
+Status :  optimal
+point  13 eps working :  0.08815343491733074
+14
+Status :  optimal_inaccurate
+point  14 eps working :  0
+Status :  optimal_inaccurate
+point  14 eps working :  0
+Status :  optimal_inaccurate
+point  14 eps working :  0
+Status :  optimal
+point  14 eps working :  0
+Status :  optimal
+point  14 eps working :  0
+Status :  optimal
+point  14 eps working :  0.1106467992067337
+Status :  optimal
+point  14 eps working :  0.1106467992067337
+Status :  optimal
+point  14 eps working :  0.1106467992067337
+Status :  optimal
+point  14 eps working :  0.1106467992067337
+Status :  optimal
+point  14 eps working :  0.11756222415715456
+15
+Status :  optimal_inaccurate
+point  15 eps working :  0
+Status :  optimal_inaccurate
+point  15 eps working :  0
+Status :  optimal_inaccurate
+point  15 eps working :  0
+Status :  optimal
+point  15 eps working :  0
+Status :  optimal
+point  15 eps working :  0
+Status :  optimal
+point  15 eps working :  0
+Status :  optimal
+point  15 eps working :  0.0691896453499794
+Status :  optimal
+point  15 eps working :  0.1037844680249691
+Status :  optimal
+point  15 eps working :  0.1037844680249691
+Status :  optimal
+point  15 eps working :  0.1037844680249691
+16
+Status :  optimal_inaccurate
+point  16 eps working :  0
+Status :  optimal_inaccurate
+point  16 eps working :  0
+Status :  optimal_inaccurate
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0
+Status :  optimal
+point  16 eps working :  0.013690479099750519
+Status :  optimal
+point  16 eps working :  0.020535718649625778
+17
+Status :  optimal_inaccurate
+point  17 eps working :  0
+Status :  optimal_inaccurate
+point  17 eps working :  0
+Status :  optimal_inaccurate
+point  17 eps working :  0
+Status :  optimal
+point  17 eps working :  0
+Status :  optimal
+point  17 eps working :  0
+Status :  optimal
+point  17 eps working :  0
+Status :  optimal
+point  17 eps working :  0
+Status :  optimal
+point  17 eps working :  0.03274056315422058
+Status :  optimal
+point  17 eps working :  0.03274056315422058
+Status :  optimal
+point  17 eps working :  0.03274056315422058
+18
+Status :  optimal_inaccurate
+point  18 eps working :  0
+Status :  optimal_inaccurate
+point  18 eps working :  0
+Status :  optimal
+point  18 eps working :  0
+Status :  optimal
+point  18 eps working :  0
+Status :  optimal
+point  18 eps working :  0
+Status :  optimal
+point  18 eps working :  0.13343964517116547
+Status :  optimal
+point  18 eps working :  0.13343964517116547
+Status :  optimal
+point  18 eps working :  0.13343964517116547
+Status :  optimal
+point  18 eps working :  0.13343964517116547
+Status :  optimal
+point  18 eps working :  0.13343964517116547
+19
+Status :  optimal_inaccurate
+point  19 eps working :  0
+Status :  optimal_inaccurate
+point  19 eps working :  0
+Status :  optimal_inaccurate
+point  19 eps working :  0
+Status :  optimal
+point  19 eps working :  0
+Status :  optimal
+point  19 eps working :  0
+Status :  optimal
+point  19 eps working :  0
+Status :  optimal
+point  19 eps working :  0.07679194957017899
+Status :  optimal
+point  19 eps working :  0.11518792435526848
+Status :  optimal
+point  19 eps working :  0.11518792435526848
+Status :  optimal
+point  19 eps working :  0.11518792435526848
+20
+Status :  optimal_inaccurate
+point  20 eps working :  0
+Status :  optimal_inaccurate
+point  20 eps working :  0
+Status :  optimal_inaccurate
+point  20 eps working :  0
+Status :  optimal
+point  20 eps working :  0
+Status :  optimal
+point  20 eps working :  0
+Status :  optimal
+point  20 eps working :  0
+Status :  optimal
+point  20 eps working :  0.06747351586818695
+Status :  optimal
+point  20 eps working :  0.10121027380228043
+Status :  optimal
+point  20 eps working :  0.11807865276932716
+Status :  optimal
+point  20 eps working :  0.11807865276932716
+21
+Status :  optimal_inaccurate
+point  21 eps working :  0
+Status :  optimal_inaccurate
+point  21 eps working :  0
+Status :  optimal_inaccurate
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0
+Status :  optimal
+point  21 eps working :  0.018061256036162376
+Status :  optimal
+point  21 eps working :  0.027091884054243565
+22
+Status :  optimal_inaccurate
+point  22 eps working :  0
+Status :  optimal_inaccurate
+point  22 eps working :  0
+Status :  optimal_inaccurate
+point  22 eps working :  0
+Status :  optimal
+point  22 eps working :  0
+Status :  optimal
+point  22 eps working :  0
+Status :  optimal
+point  22 eps working :  0
+Status :  optimal
+point  22 eps working :  0.06712352484464645
+Status :  optimal
+point  22 eps working :  0.10068528726696968
+Status :  optimal
+point  22 eps working :  0.10068528726696968
+Status :  optimal
+point  22 eps working :  0.10907572787255049
+23
+Status :  optimal_inaccurate
+point  23 eps working :  0
+Status :  optimal_inaccurate
+point  23 eps working :  0
+Status :  optimal_inaccurate
+point  23 eps working :  0
+Status :  optimal
+point  23 eps working :  0
+Status :  optimal
+point  23 eps working :  0
+Status :  optimal
+point  23 eps working :  0
+Status :  optimal
+point  23 eps working :  0.06463950872421265
+Status :  optimal
+point  23 eps working :  0.09695926308631897
+Status :  optimal
+point  23 eps working :  0.09695926308631897
+Status :  optimal
+point  23 eps working :  0.10503920167684555
+24
+Status :  optimal_inaccurate
+point  24 eps working :  0
+Status :  optimal_inaccurate
+point  24 eps working :  0
+Status :  optimal_inaccurate
+point  24 eps working :  0
+Status :  optimal
+point  24 eps working :  0
+Status :  optimal
+point  24 eps working :  0
+Status :  optimal
+point  24 eps working :  0
+Status :  optimal
+point  24 eps working :  0.07181888073682785
+Status :  optimal
+point  24 eps working :  0.10772832110524178
+Status :  optimal
+point  24 eps working :  0.10772832110524178
+Status :  optimal
+point  24 eps working :  0.11670568119734526
+25
+Status :  optimal_inaccurate
+point  25 eps working :  0
+Status :  optimal_inaccurate
+point  25 eps working :  0
+Status :  optimal_inaccurate
+point  25 eps working :  0
+Status :  optimal
+point  25 eps working :  0
+Status :  optimal
+point  25 eps working :  0
+Status :  optimal
+point  25 eps working :  0.13046972453594208
+Status :  optimal
+point  25 eps working :  0.13046972453594208
+Status :  optimal
+point  25 eps working :  0.13046972453594208
+Status :  optimal
+point  25 eps working :  0.13046972453594208
+Status :  optimal
+point  25 eps working :  0.13046972453594208
+26
+Status :  optimal_inaccurate
+point  26 eps working :  0
+Status :  optimal_inaccurate
+point  26 eps working :  0
+Status :  optimal
+point  26 eps working :  0
+Status :  optimal
+point  26 eps working :  0
+Status :  optimal
+point  26 eps working :  0
+Status :  optimal
+point  26 eps working :  0
+Status :  optimal
+point  26 eps working :  0.05905819311738014
+Status :  optimal
+point  26 eps working :  0.08858728967607021
+Status :  optimal
+point  26 eps working :  0.08858728967607021
+Status :  optimal
+point  26 eps working :  0.08858728967607021
+27
+Status :  optimal_inaccurate
+point  27 eps working :  0
+Status :  optimal_inaccurate
+point  27 eps working :  0
+Status :  optimal_inaccurate
+point  27 eps working :  0
+Status :  optimal
+point  27 eps working :  0
+Status :  optimal
+point  27 eps working :  0
+Status :  optimal
+point  27 eps working :  0.1322307288646698
+Status :  optimal
+point  27 eps working :  0.1322307288646698
+Status :  optimal
+point  27 eps working :  0.1322307288646698
+Status :  optimal
+point  27 eps working :  0.1322307288646698
+Status :  optimal
+point  27 eps working :  0.1322307288646698
+28
+Status :  optimal_inaccurate
+point  28 eps working :  0
+Status :  optimal_inaccurate
+point  28 eps working :  0
+Status :  optimal_inaccurate
+point  28 eps working :  0
+Status :  optimal
+point  28 eps working :  0
+Status :  optimal
+point  28 eps working :  0
+Status :  optimal
+point  28 eps working :  0
+Status :  optimal
+point  28 eps working :  0.07071539014577866
+Status :  optimal
+point  28 eps working :  0.07071539014577866
+Status :  optimal
+point  28 eps working :  0.07071539014577866
+Status :  optimal
+point  28 eps working :  0.07955481391400099
+29
+Status :  optimal_inaccurate
+point  29 eps working :  0
+Status :  optimal_inaccurate
+point  29 eps working :  0
+Status :  optimal_inaccurate
+point  29 eps working :  0
+Status :  optimal
+point  29 eps working :  0
+Status :  optimal
+point  29 eps working :  0
+Status :  optimal
+point  29 eps working :  0.13765759766101837
+Status :  optimal
+point  29 eps working :  0.13765759766101837
+Status :  optimal
+point  29 eps working :  0.13765759766101837
+Status :  optimal
+point  29 eps working :  0.13765759766101837
+Status :  optimal
+point  29 eps working :  0.13765759766101837
+30
+Status :  optimal_inaccurate
+point  30 eps working :  0
+Status :  optimal_inaccurate
+point  30 eps working :  0
+Status :  optimal_inaccurate
+point  30 eps working :  0
+Status :  optimal
+point  30 eps working :  0
+Status :  optimal
+point  30 eps working :  0
+Status :  optimal
+point  30 eps working :  0
+Status :  optimal
+point  30 eps working :  0.06471209973096848
+Status :  optimal
+point  30 eps working :  0.09706814959645271
+Status :  optimal
+point  30 eps working :  0.09706814959645271
+Status :  optimal
+point  30 eps working :  0.10515716206282377
+31
+Status :  optimal_inaccurate
+point  31 eps working :  0
+Status :  optimal_inaccurate
+point  31 eps working :  0
+Status :  optimal_inaccurate
+point  31 eps working :  0
+Status :  optimal
+point  31 eps working :  0
+Status :  optimal
+point  31 eps working :  0
+Status :  optimal
+point  31 eps working :  0.12395437061786652
+Status :  optimal
+point  31 eps working :  0.12395437061786652
+Status :  optimal
+point  31 eps working :  0.12395437061786652
+Status :  optimal
+point  31 eps working :  0.12395437061786652
+Status :  optimal
+point  31 eps working :  0.13170151878148317
+32
+Status :  optimal_inaccurate
+point  32 eps working :  0
+Status :  optimal_inaccurate
+point  32 eps working :  0
+Status :  optimal_inaccurate
+point  32 eps working :  0
+Status :  optimal
+point  32 eps working :  0
+Status :  optimal
+point  32 eps working :  0
+Status :  optimal
+point  32 eps working :  0.11357109248638153
+Status :  optimal
+point  32 eps working :  0.11357109248638153
+Status :  optimal
+point  32 eps working :  0.11357109248638153
+Status :  optimal
+point  32 eps working :  0.11357109248638153
+Status :  optimal
+point  32 eps working :  0.11357109248638153
+33
+Status :  optimal_inaccurate
+point  33 eps working :  0
+Status :  optimal_inaccurate
+point  33 eps working :  0
+Status :  optimal_inaccurate
+point  33 eps working :  0
+Status :  optimal
+point  33 eps working :  0
+Status :  optimal
+point  33 eps working :  0
+Status :  optimal
+point  33 eps working :  0.1417912095785141
+Status :  optimal
+point  33 eps working :  0.1417912095785141
+Status :  optimal
+point  33 eps working :  0.1417912095785141
+Status :  optimal
+point  33 eps working :  0.1417912095785141
+Status :  optimal
+point  33 eps working :  0.1417912095785141
+34
+Status :  optimal_inaccurate
+point  34 eps working :  0
+Status :  optimal_inaccurate
+point  34 eps working :  0
+Status :  optimal_inaccurate
+point  34 eps working :  0
+Status :  optimal
+point  34 eps working :  0
+Status :  optimal
+point  34 eps working :  0
+Status :  optimal
+point  34 eps working :  0
+Status :  optimal
+point  34 eps working :  0.07419916987419128
+Status :  optimal
+point  34 eps working :  0.11129875481128693
+Status :  optimal
+point  34 eps working :  0.12984854727983475
+Status :  optimal
+point  34 eps working :  0.13912344351410866
+35
+Status :  optimal_inaccurate
+point  35 eps working :  0
+Status :  optimal_inaccurate
+point  35 eps working :  0
+Status :  optimal_inaccurate
+point  35 eps working :  0
+Status :  optimal
+point  35 eps working :  0
+Status :  optimal
+point  35 eps working :  0
+Status :  optimal
+point  35 eps working :  0
+Status :  optimal
+point  35 eps working :  0.06404811143875122
+Status :  optimal
+point  35 eps working :  0.09607216715812683
+Status :  optimal
+point  35 eps working :  0.11208419501781464
+Status :  optimal
+point  35 eps working :  0.12009020894765854
+36
+Status :  optimal_inaccurate
+point  36 eps working :  0
+Status :  optimal_inaccurate
+point  36 eps working :  0
+Status :  optimal_inaccurate
+point  36 eps working :  0
+Status :  optimal
+point  36 eps working :  0
+Status :  optimal
+point  36 eps working :  0
+Status :  optimal
+point  36 eps working :  0
+Status :  optimal
+point  36 eps working :  0.06512213498353958
+Status :  optimal
+point  36 eps working :  0.09768320247530937
+Status :  optimal
+point  36 eps working :  0.11396373622119427
+Status :  optimal
+point  36 eps working :  0.12210400309413671
+37
+Status :  optimal_inaccurate
+point  37 eps working :  0
+Status :  optimal_inaccurate
+point  37 eps working :  0
+Status :  optimal_inaccurate
+point  37 eps working :  0
+Status :  optimal
+point  37 eps working :  0
+Status :  optimal
+point  37 eps working :  0
+Status :  optimal
+point  37 eps working :  0
+Status :  optimal
+point  37 eps working :  0.06598391383886337
+Status :  optimal
+point  37 eps working :  0.09897587075829506
+Status :  optimal
+point  37 eps working :  0.1154718492180109
+Status :  optimal
+point  37 eps working :  0.1154718492180109
+38
+Status :  optimal
+point  38 eps working :  0
+Status :  optimal_inaccurate
+point  38 eps working :  0
+Status :  optimal_inaccurate
+point  38 eps working :  0
+Status :  optimal_inaccurate
+point  38 eps working :  0
+Status :  optimal
+point  38 eps working :  0
+Status :  optimal
+point  38 eps working :  0
+Status :  optimal
+point  38 eps working :  0.07550846040248871
+Status :  optimal
+point  38 eps working :  0.11326269060373306
+Status :  optimal
+point  38 eps working :  0.11326269060373306
+Status :  optimal
+point  38 eps working :  0.12270124815404415
+39
+Status :  optimal_inaccurate
+point  39 eps working :  0
+Status :  optimal_inaccurate
+point  39 eps working :  0
+Status :  optimal_inaccurate
+point  39 eps working :  0
+Status :  optimal
+point  39 eps working :  0
+Status :  optimal
+point  39 eps working :  0
+Status :  optimal
+point  39 eps working :  0
+Status :  optimal
+point  39 eps working :  0.0626404881477356
+Status :  optimal
+point  39 eps working :  0.0939607322216034
+Status :  optimal
+point  39 eps working :  0.10962085425853729
+Status :  optimal
+point  39 eps working :  0.10962085425853729
+40
+Status :  optimal_inaccurate
+point  40 eps working :  0
+Status :  optimal_inaccurate
+point  40 eps working :  0
+Status :  optimal_inaccurate
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0
+Status :  optimal
+point  40 eps working :  0.01738329418003559
+Status :  optimal
+point  40 eps working :  0.026074941270053387
+41
+Status :  optimal_inaccurate
+point  41 eps working :  0
+Status :  optimal_inaccurate
+point  41 eps working :  0
+Status :  optimal_inaccurate
+point  41 eps working :  0
+Status :  optimal
+point  41 eps working :  0
+Status :  optimal
+point  41 eps working :  0
+Status :  optimal
+point  41 eps working :  0
+Status :  optimal
+point  41 eps working :  0.06381681561470032
+Status :  optimal
+point  41 eps working :  0.06381681561470032
+Status :  optimal
+point  41 eps working :  0.0797710195183754
+Status :  optimal
+point  41 eps working :  0.0797710195183754
+42
+Status :  optimal_inaccurate
+point  42 eps working :  0
+Status :  optimal_inaccurate
+point  42 eps working :  0
+Status :  optimal_inaccurate
+point  42 eps working :  0
+Status :  optimal
+point  42 eps working :  0
+Status :  optimal
+point  42 eps working :  0
+Status :  optimal
+point  42 eps working :  0
+Status :  optimal
+point  42 eps working :  0.06021888926625252
+Status :  optimal
+point  42 eps working :  0.09032833389937878
+Status :  optimal
+point  42 eps working :  0.09032833389937878
+Status :  optimal
+point  42 eps working :  0.09785569505766034
+43
+Status :  optimal_inaccurate
+point  43 eps working :  0
+Status :  optimal_inaccurate
+point  43 eps working :  0
+Status :  optimal_inaccurate
+point  43 eps working :  0
+Status :  optimal
+point  43 eps working :  0
+Status :  optimal
+point  43 eps working :  0
+Status :  optimal
+point  43 eps working :  0
+Status :  optimal
+point  43 eps working :  0.07208117842674255
+Status :  optimal
+point  43 eps working :  0.07208117842674255
+Status :  optimal
+point  43 eps working :  0.07208117842674255
+Status :  optimal
+point  43 eps working :  0.08109132573008537
+44
+Status :  optimal_inaccurate
+point  44 eps working :  0
+Status :  optimal_inaccurate
+point  44 eps working :  0
+Status :  optimal_inaccurate
+point  44 eps working :  0
+Status :  optimal
+point  44 eps working :  0
+Status :  optimal
+point  44 eps working :  0
+Status :  optimal
+point  44 eps working :  0
+Status :  optimal
+point  44 eps working :  0.07224279642105103
+Status :  optimal
+point  44 eps working :  0.07224279642105103
+Status :  optimal
+point  44 eps working :  0.09030349552631378
+Status :  optimal
+point  44 eps working :  0.09030349552631378
+45
+Status :  optimal_inaccurate
+point  45 eps working :  0
+Status :  optimal_inaccurate
+point  45 eps working :  0
+Status :  optimal_inaccurate
+point  45 eps working :  0
+Status :  optimal
+point  45 eps working :  0
+Status :  optimal
+point  45 eps working :  0
+Status :  optimal
+point  45 eps working :  0.12249116599559784
+Status :  optimal
+point  45 eps working :  0.12249116599559784
+Status :  optimal
+point  45 eps working :  0.12249116599559784
+Status :  optimal
+point  45 eps working :  0.12249116599559784
+Status :  optimal
+point  45 eps working :  0.12249116599559784
+46
+Status :  optimal_inaccurate
+point  46 eps working :  0
+Status :  optimal_inaccurate
+point  46 eps working :  0
+Status :  optimal_inaccurate
+point  46 eps working :  0
+Status :  optimal
+point  46 eps working :  0
+Status :  optimal
+point  46 eps working :  0
+Status :  optimal
+point  46 eps working :  0
+Status :  optimal
+point  46 eps working :  0.06465503573417664
+Status :  optimal
+point  46 eps working :  0.09698255360126495
+Status :  optimal
+point  46 eps working :  0.11314631253480911
+Status :  optimal
+point  46 eps working :  0.12122819200158119
+47
+Status :  optimal_inaccurate
+point  47 eps working :  0
+Status :  optimal_inaccurate
+point  47 eps working :  0
+Status :  optimal_inaccurate
+point  47 eps working :  0
+Status :  optimal
+point  47 eps working :  0
+Status :  optimal
+point  47 eps working :  0
+Status :  optimal
+point  47 eps working :  0.14364758133888245
+Status :  optimal
+point  47 eps working :  0.14364758133888245
+Status :  optimal
+point  47 eps working :  0.14364758133888245
+Status :  optimal
+point  47 eps working :  0.16160352900624275
+Status :  optimal
+point  47 eps working :  0.16160352900624275
+48
+Status :  optimal_inaccurate
+point  48 eps working :  0
+Status :  optimal_inaccurate
+point  48 eps working :  0
+Status :  optimal_inaccurate
+point  48 eps working :  0
+Status :  optimal
+point  48 eps working :  0
+Status :  optimal
+point  48 eps working :  0
+Status :  optimal
+point  48 eps working :  0
+Status :  optimal
+point  48 eps working :  0.06334835290908813
+Status :  optimal
+point  48 eps working :  0.0950225293636322
+Status :  optimal
+point  48 eps working :  0.0950225293636322
+Status :  optimal
+point  48 eps working :  0.0950225293636322
+49
+Status :  optimal_inaccurate
+point  49 eps working :  0
+Status :  optimal_inaccurate
+point  49 eps working :  0
+Status :  optimal_inaccurate
+point  49 eps working :  0
+Status :  optimal
+point  49 eps working :  0
+Status :  optimal
+point  49 eps working :  0
+Status :  optimal
+point  49 eps working :  0
+Status :  optimal
+point  49 eps working :  0
+Status :  optimal
+point  49 eps working :  0.030304672196507454
+Status :  optimal
+point  49 eps working :  0.04545700829476118
+Status :  optimal
+point  49 eps working :  0.053033176343888044
+50
+Status :  optimal_inaccurate
+point  50 eps working :  0
+Status :  optimal_inaccurate
+point  50 eps working :  0
+Status :  optimal_inaccurate
+point  50 eps working :  0
+Status :  optimal
+point  50 eps working :  0
+Status :  optimal
+point  50 eps working :  0
+Status :  optimal
+point  50 eps working :  0
+Status :  optimal
+point  50 eps working :  0.06722395122051239
+Status :  optimal
+point  50 eps working :  0.10083592683076859
+Status :  optimal
+point  50 eps working :  0.10083592683076859
+Status :  optimal
+point  50 eps working :  0.10083592683076859
+51
+Status :  optimal_inaccurate
+point  51 eps working :  0
+Status :  optimal_inaccurate
+point  51 eps working :  0
+Status :  optimal_inaccurate
+point  51 eps working :  0
+Status :  optimal
+point  51 eps working :  0
+Status :  optimal
+point  51 eps working :  0
+Status :  optimal
+point  51 eps working :  0
+Status :  optimal
+point  51 eps working :  0.0638083964586258
+Status :  optimal
+point  51 eps working :  0.09571259468793869
+Status :  optimal
+point  51 eps working :  0.09571259468793869
+Status :  optimal
+point  51 eps working :  0.10368864424526691
+52
+Status :  optimal_inaccurate
+point  52 eps working :  0
+Status :  optimal_inaccurate
+point  52 eps working :  0
+Status :  optimal_inaccurate
+point  52 eps working :  0
+Status :  optimal
+point  52 eps working :  0
+Status :  optimal
+point  52 eps working :  0
+Status :  optimal
+point  52 eps working :  0
+Status :  optimal
+point  52 eps working :  0.06308223307132721
+Status :  optimal
+point  52 eps working :  0.09462334960699081
+Status :  optimal
+point  52 eps working :  0.11039390787482262
+Status :  optimal
+point  52 eps working :  0.11039390787482262
+53
+Status :  optimal_inaccurate
+point  53 eps working :  0
+Status :  optimal_inaccurate
+point  53 eps working :  0
+Status :  optimal_inaccurate
+point  53 eps working :  0
+Status :  optimal
+point  53 eps working :  0
+Status :  optimal
+point  53 eps working :  0
+Status :  optimal
+point  53 eps working :  0
+Status :  optimal
+point  53 eps working :  0.06246326491236687
+Status :  optimal
+point  53 eps working :  0.06246326491236687
+Status :  optimal
+point  53 eps working :  0.06246326491236687
+Status :  optimal
+point  53 eps working :  0.07027117302641273
+54
+Status :  optimal_inaccurate
+point  54 eps working :  0
+Status :  optimal_inaccurate
+point  54 eps working :  0
+Status :  optimal_inaccurate
+point  54 eps working :  0
+Status :  optimal
+point  54 eps working :  0
+Status :  optimal
+point  54 eps working :  0
+Status :  optimal
+point  54 eps working :  0.1277751326560974
+Status :  optimal
+point  54 eps working :  0.1277751326560974
+Status :  optimal
+point  54 eps working :  0.1277751326560974
+Status :  optimal
+point  54 eps working :  0.1277751326560974
+Status :  optimal
+point  54 eps working :  0.1357610784471035
+55
+Status :  optimal_inaccurate
+point  55 eps working :  0
+Status :  optimal_inaccurate
+point  55 eps working :  0
+Status :  optimal_inaccurate
+point  55 eps working :  0
+Status :  optimal
+point  55 eps working :  0
+Status :  optimal
+point  55 eps working :  0
+Status :  optimal
+point  55 eps working :  0
+Status :  optimal
+point  55 eps working :  0.07457419484853745
+Status :  optimal
+point  55 eps working :  0.11186129227280617
+Status :  optimal
+point  55 eps working :  0.13050484098494053
+Status :  optimal
+point  55 eps working :  0.1398266153410077
+56
+Status :  optimal_inaccurate
+point  56 eps working :  0
+Status :  optimal_inaccurate
+point  56 eps working :  0
+Status :  optimal_inaccurate
+point  56 eps working :  0
+Status :  optimal
+point  56 eps working :  0
+Status :  optimal
+point  56 eps working :  0
+Status :  optimal
+point  56 eps working :  0
+Status :  optimal
+point  56 eps working :  0.056219469755887985
+Status :  optimal
+point  56 eps working :  0.08432920463383198
+Status :  optimal
+point  56 eps working :  0.08432920463383198
+Status :  optimal
+point  56 eps working :  0.09135663835331798
+57
+Status :  optimal_inaccurate
+point  57 eps working :  0
+Status :  optimal_inaccurate
+point  57 eps working :  0
+Status :  optimal_inaccurate
+point  57 eps working :  0
+Status :  optimal
+point  57 eps working :  0
+Status :  optimal
+point  57 eps working :  0
+Status :  optimal
+point  57 eps working :  0
+Status :  optimal
+point  57 eps working :  0.07732521742582321
+Status :  optimal
+point  57 eps working :  0.11598782613873482
+Status :  optimal
+point  57 eps working :  0.11598782613873482
+Status :  optimal
+point  57 eps working :  0.12565347831696272
+58
+Status :  optimal_inaccurate
+point  58 eps working :  0
+Status :  optimal_inaccurate
+point  58 eps working :  0
+Status :  optimal_inaccurate
+point  58 eps working :  0
+Status :  optimal
+point  58 eps working :  0
+Status :  optimal
+point  58 eps working :  0
+Status :  optimal
+point  58 eps working :  0
+Status :  optimal
+point  58 eps working :  0.06939319521188736
+Status :  optimal
+point  58 eps working :  0.06939319521188736
+Status :  optimal
+point  58 eps working :  0.0867414940148592
+Status :  optimal
+point  58 eps working :  0.0867414940148592
+59
+Status :  optimal_inaccurate
+point  59 eps working :  0
+Status :  optimal_inaccurate
+point  59 eps working :  0
+Status :  optimal_inaccurate
+point  59 eps working :  0
+Status :  optimal
+point  59 eps working :  0
+Status :  optimal
+point  59 eps working :  0
+Status :  optimal
+point  59 eps working :  0
+Status :  optimal
+point  59 eps working :  0.06643267720937729
+Status :  optimal
+point  59 eps working :  0.09964901581406593
+Status :  optimal
+point  59 eps working :  0.09964901581406593
+Status :  optimal
+point  59 eps working :  0.09964901581406593
+60
+Status :  optimal_inaccurate
+point  60 eps working :  0
+Status :  optimal_inaccurate
+point  60 eps working :  0
+Status :  optimal_inaccurate
+point  60 eps working :  0
+Status :  optimal
+point  60 eps working :  0
+Status :  optimal
+point  60 eps working :  0
+Status :  optimal
+point  60 eps working :  0
+Status :  optimal
+point  60 eps working :  0.08297301083803177
+Status :  optimal
+point  60 eps working :  0.08297301083803177
+Status :  optimal
+point  60 eps working :  0.10371626354753971
+Status :  optimal
+point  60 eps working :  0.10371626354753971
+61
+Status :  optimal_inaccurate
+point  61 eps working :  0
+Status :  optimal_inaccurate
+point  61 eps working :  0
+Status :  optimal_inaccurate
+point  61 eps working :  0
+Status :  optimal
+point  61 eps working :  0
+Status :  optimal
+point  61 eps working :  0
+Status :  optimal
+point  61 eps working :  0.1332336962223053
+Status :  optimal
+point  61 eps working :  0.1332336962223053
+Status :  optimal
+point  61 eps working :  0.1332336962223053
+Status :  optimal
+point  61 eps working :  0.1332336962223053
+Status :  optimal
+point  61 eps working :  0.1332336962223053
+62
+Status :  optimal_inaccurate
+point  62 eps working :  0
+Status :  optimal_inaccurate
+point  62 eps working :  0
+Status :  optimal_inaccurate
+point  62 eps working :  0
+Status :  optimal
+point  62 eps working :  0
+Status :  optimal
+point  62 eps working :  0
+Status :  optimal
+point  62 eps working :  0.13013234734535217
+Status :  optimal
+point  62 eps working :  0.13013234734535217
+Status :  optimal
+point  62 eps working :  0.13013234734535217
+Status :  optimal
+point  62 eps working :  0.1463988907635212
+Status :  optimal
+point  62 eps working :  0.1545321624726057
+63
+Status :  optimal_inaccurate
+point  63 eps working :  0
+Status :  optimal_inaccurate
+point  63 eps working :  0
+Status :  optimal_inaccurate
+point  63 eps working :  0
+Status :  optimal
+point  63 eps working :  0
+Status :  optimal
+point  63 eps working :  0
+Status :  optimal
+point  63 eps working :  0
+Status :  optimal
+point  63 eps working :  0.06655951589345932
+Status :  optimal
+point  63 eps working :  0.06655951589345932
+Status :  optimal
+point  63 eps working :  0.08319939486682415
+Status :  optimal
+point  63 eps working :  0.08319939486682415
+64
+Status :  optimal_inaccurate
+point  64 eps working :  0
+Status :  optimal_inaccurate
+point  64 eps working :  0
+Status :  optimal_inaccurate
+point  64 eps working :  0
+Status :  optimal
+point  64 eps working :  0
+Status :  optimal
+point  64 eps working :  0
+Status :  optimal
+point  64 eps working :  0.12668746709823608
+Status :  optimal
+point  64 eps working :  0.12668746709823608
+Status :  optimal
+point  64 eps working :  0.12668746709823608
+Status :  optimal
+point  64 eps working :  0.1425234004855156
+Status :  optimal
+point  64 eps working :  0.15044136717915535
+65
+Status :  optimal_inaccurate
+point  65 eps working :  0
+Status :  optimal_inaccurate
+point  65 eps working :  0
+Status :  optimal_inaccurate
+point  65 eps working :  0
+Status :  optimal
+point  65 eps working :  0
+Status :  optimal
+point  65 eps working :  0
+Status :  optimal
+point  65 eps working :  0
+Status :  optimal
+point  65 eps working :  0.06554246693849564
+Status :  optimal
+point  65 eps working :  0.09831370040774345
+Status :  optimal
+point  65 eps working :  0.09831370040774345
+Status :  optimal
+point  65 eps working :  0.10650650877505541
+66
+Status :  optimal_inaccurate
+point  66 eps working :  0
+Status :  optimal_inaccurate
+point  66 eps working :  0
+Status :  optimal_inaccurate
+point  66 eps working :  0
+Status :  optimal
+point  66 eps working :  0
+Status :  optimal
+point  66 eps working :  0
+Status :  optimal
+point  66 eps working :  0
+Status :  optimal
+point  66 eps working :  0.06579135358333588
+Status :  optimal
+point  66 eps working :  0.06579135358333588
+Status :  optimal
+point  66 eps working :  0.08223919197916985
+Status :  optimal
+point  66 eps working :  0.08223919197916985
+67
+Status :  optimal_inaccurate
+point  67 eps working :  0
+Status :  optimal_inaccurate
+point  67 eps working :  0
+Status :  optimal_inaccurate
+point  67 eps working :  0
+Status :  optimal
+point  67 eps working :  0
+Status :  optimal
+point  67 eps working :  0
+Status :  optimal
+point  67 eps working :  0
+Status :  optimal
+point  67 eps working :  0.0795891284942627
+Status :  optimal
+point  67 eps working :  0.11938369274139404
+Status :  optimal
+point  67 eps working :  0.11938369274139404
+Status :  optimal
+point  67 eps working :  0.11938369274139404
+68
+Status :  optimal_inaccurate
+point  68 eps working :  0
+Status :  optimal_inaccurate
+point  68 eps working :  0
+Status :  optimal_inaccurate
+point  68 eps working :  0
+Status :  optimal
+point  68 eps working :  0
+Status :  optimal
+point  68 eps working :  0
+Status :  optimal
+point  68 eps working :  0.13991184532642365
+Status :  optimal
+point  68 eps working :  0.13991184532642365
+Status :  optimal
+point  68 eps working :  0.13991184532642365
+Status :  optimal
+point  68 eps working :  0.13991184532642365
+Status :  optimal
+point  68 eps working :  0.14865633565932512
+69
+Status :  optimal_inaccurate
+point  69 eps working :  0
+Status :  optimal_inaccurate
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0
+Status :  optimal
+point  69 eps working :  0.025494150817394257
+Status :  optimal
+point  69 eps working :  0.038241226226091385
+Status :  optimal
+point  69 eps working :  0.04461476393043995
+70
+Status :  optimal_inaccurate
+point  70 eps working :  0
+Status :  optimal_inaccurate
+point  70 eps working :  0
+Status :  optimal_inaccurate
+point  70 eps working :  0
+Status :  optimal
+point  70 eps working :  0
+Status :  optimal
+point  70 eps working :  0
+Status :  optimal
+point  70 eps working :  0.12721030414104462
+Status :  optimal
+point  70 eps working :  0.12721030414104462
+Status :  optimal
+point  70 eps working :  0.12721030414104462
+Status :  optimal
+point  70 eps working :  0.1431115921586752
+Status :  optimal
+point  70 eps working :  0.15106223616749048
+71
+Status :  optimal_inaccurate
+point  71 eps working :  0
+Status :  optimal_inaccurate
+point  71 eps working :  0
+Status :  optimal_inaccurate
+point  71 eps working :  0
+Status :  optimal
+point  71 eps working :  0
+Status :  optimal
+point  71 eps working :  0
+Status :  optimal
+point  71 eps working :  0
+Status :  optimal
+point  71 eps working :  0.06731212139129639
+Status :  optimal
+point  71 eps working :  0.10096818208694458
+Status :  optimal
+point  71 eps working :  0.11779621243476868
+Status :  optimal
+point  71 eps working :  0.12621022760868073
+72
+Status :  optimal_inaccurate
+point  72 eps working :  0
+Status :  optimal_inaccurate
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0
+Status :  optimal
+point  72 eps working :  0.01434437744319439
+Status :  optimal
+point  72 eps working :  0.021516566164791584
+73
+Status :  optimal_inaccurate
+point  73 eps working :  0
+Status :  optimal_inaccurate
+point  73 eps working :  0
+Status :  optimal_inaccurate
+point  73 eps working :  0
+Status :  optimal
+point  73 eps working :  0
+Status :  optimal
+point  73 eps working :  0
+Status :  optimal
+point  73 eps working :  0
+Status :  optimal
+point  73 eps working :  0.06812448054552078
+Status :  optimal
+point  73 eps working :  0.06812448054552078
+Status :  optimal
+point  73 eps working :  0.06812448054552078
+Status :  optimal
+point  73 eps working :  0.06812448054552078
+74
+Status :  optimal_inaccurate
+point  74 eps working :  0
+Status :  optimal_inaccurate
+point  74 eps working :  0
+Status :  optimal_inaccurate
+point  74 eps working :  0
+Status :  optimal
+point  74 eps working :  0
+Status :  optimal
+point  74 eps working :  0
+Status :  optimal
+point  74 eps working :  0
+Status :  optimal
+point  74 eps working :  0.07819507271051407
+Status :  optimal
+point  74 eps working :  0.07819507271051407
+Status :  optimal
+point  74 eps working :  0.09774384088814259
+Status :  optimal
+point  74 eps working :  0.09774384088814259
+75
+Status :  optimal_inaccurate
+point  75 eps working :  0
+Status :  optimal_inaccurate
+point  75 eps working :  0
+Status :  optimal_inaccurate
+point  75 eps working :  0
+Status :  optimal
+point  75 eps working :  0
+Status :  optimal
+point  75 eps working :  0
+Status :  optimal
+point  75 eps working :  0.13551652431488037
+Status :  optimal
+point  75 eps working :  0.13551652431488037
+Status :  optimal
+point  75 eps working :  0.13551652431488037
+Status :  optimal
+point  75 eps working :  0.13551652431488037
+Status :  optimal
+point  75 eps working :  0.13551652431488037
+76
+Status :  optimal_inaccurate
+point  76 eps working :  0
+Status :  optimal_inaccurate
+point  76 eps working :  0
+Status :  optimal_inaccurate
+point  76 eps working :  0
+Status :  optimal
+point  76 eps working :  0
+Status :  optimal
+point  76 eps working :  0
+Status :  optimal
+point  76 eps working :  0
+Status :  optimal
+point  76 eps working :  0.0823611468076706
+Status :  optimal
+point  76 eps working :  0.0823611468076706
+Status :  optimal
+point  76 eps working :  0.10295143350958824
+Status :  optimal
+point  76 eps working :  0.10295143350958824
+77
+Status :  optimal_inaccurate
+point  77 eps working :  0
+Status :  optimal_inaccurate
+point  77 eps working :  0
+Status :  optimal_inaccurate
+point  77 eps working :  0
+Status :  optimal
+point  77 eps working :  0
+Status :  optimal
+point  77 eps working :  0
+Status :  optimal
+point  77 eps working :  0
+Status :  optimal
+point  77 eps working :  0
+Status :  optimal
+point  77 eps working :  0.035876404494047165
+Status :  optimal
+point  77 eps working :  0.05381460674107075
+Status :  optimal
+point  77 eps working :  0.06278370786458254
+78
+Status :  optimal_inaccurate
+point  78 eps working :  0
+Status :  optimal_inaccurate
+point  78 eps working :  0
+Status :  optimal_inaccurate
+point  78 eps working :  0
+Status :  optimal
+point  78 eps working :  0
+Status :  optimal
+point  78 eps working :  0
+Status :  optimal
+point  78 eps working :  0
+Status :  optimal
+point  78 eps working :  0.06813663989305496
+Status :  optimal
+point  78 eps working :  0.10220495983958244
+Status :  optimal
+point  78 eps working :  0.10220495983958244
+Status :  optimal
+point  78 eps working :  0.11072203982621431
+79
+Status :  optimal_inaccurate
+point  79 eps working :  0
+Status :  optimal_inaccurate
+point  79 eps working :  0
+Status :  optimal_inaccurate
+point  79 eps working :  0
+Status :  optimal
+point  79 eps working :  0
+Status :  optimal
+point  79 eps working :  0
+Status :  optimal
+point  79 eps working :  0
+Status :  optimal
+point  79 eps working :  0.06588820368051529
+Status :  optimal
+point  79 eps working :  0.09883230552077293
+Status :  optimal
+point  79 eps working :  0.11530435644090176
+Status :  optimal
+point  79 eps working :  0.11530435644090176
+80
+Status :  optimal_inaccurate
+point  80 eps working :  0
+Status :  optimal_inaccurate
+point  80 eps working :  0
+Status :  optimal_inaccurate
+point  80 eps working :  0
+Status :  optimal
+point  80 eps working :  0
+Status :  optimal
+point  80 eps working :  0
+Status :  optimal
+point  80 eps working :  0
+Status :  optimal
+point  80 eps working :  0.07255436480045319
+Status :  optimal
+point  80 eps working :  0.10883154720067978
+Status :  optimal
+point  80 eps working :  0.12697013840079308
+Status :  optimal
+point  80 eps working :  0.12697013840079308
+81
+Status :  optimal_inaccurate
+point  81 eps working :  0
+Status :  optimal_inaccurate
+point  81 eps working :  0
+Status :  optimal_inaccurate
+point  81 eps working :  0
+Status :  optimal
+point  81 eps working :  0
+Status :  optimal
+point  81 eps working :  0
+Status :  optimal
+point  81 eps working :  0
+Status :  optimal
+point  81 eps working :  0.06661078333854675
+Status :  optimal
+point  81 eps working :  0.09991617500782013
+Status :  optimal
+point  81 eps working :  0.11656887084245682
+Status :  optimal
+point  81 eps working :  0.12489521875977516
+82
+Status :  optimal_inaccurate
+point  82 eps working :  0
+Status :  optimal_inaccurate
+point  82 eps working :  0
+Status :  optimal_inaccurate
+point  82 eps working :  0
+Status :  optimal
+point  82 eps working :  0
+Status :  optimal
+point  82 eps working :  0
+Status :  optimal
+point  82 eps working :  0
+Status :  optimal
+point  82 eps working :  0.06014147028326988
+Status :  optimal
+point  82 eps working :  0.09021220542490482
+Status :  optimal
+point  82 eps working :  0.1052475729957223
+Status :  optimal
+point  82 eps working :  0.11276525678113103
+83
+Status :  optimal_inaccurate
+point  83 eps working :  0
+Status :  optimal_inaccurate
+point  83 eps working :  0
+Status :  optimal_inaccurate
+point  83 eps working :  0
+Status :  optimal
+point  83 eps working :  0
+Status :  optimal
+point  83 eps working :  0
+Status :  optimal
+point  83 eps working :  0
+Status :  optimal
+point  83 eps working :  0.06117526814341545
+Status :  optimal
+point  83 eps working :  0.09176290221512318
+Status :  optimal
+point  83 eps working :  0.09176290221512318
+Status :  optimal
+point  83 eps working :  0.09940981073305011
+84
+Status :  optimal_inaccurate
+point  84 eps working :  0
+Status :  optimal_inaccurate
+point  84 eps working :  0
+Status :  optimal_inaccurate
+point  84 eps working :  0
+Status :  optimal
+point  84 eps working :  0
+Status :  optimal
+point  84 eps working :  0
+Status :  optimal
+point  84 eps working :  0.12056131660938263
+Status :  optimal
+point  84 eps working :  0.12056131660938263
+Status :  optimal
+point  84 eps working :  0.12056131660938263
+Status :  optimal
+point  84 eps working :  0.12056131660938263
+Status :  optimal
+point  84 eps working :  0.12056131660938263
+85
+Status :  optimal_inaccurate
+point  85 eps working :  0
+Status :  optimal_inaccurate
+point  85 eps working :  0
+Status :  optimal_inaccurate
+point  85 eps working :  0
+Status :  optimal
+point  85 eps working :  0
+Status :  optimal
+point  85 eps working :  0
+Status :  optimal
+point  85 eps working :  0.13187317550182343
+Status :  optimal
+point  85 eps working :  0.13187317550182343
+Status :  optimal
+point  85 eps working :  0.13187317550182343
+Status :  optimal
+point  85 eps working :  0.13187317550182343
+Status :  optimal
+point  85 eps working :  0.1401152489706874
+86
+Status :  optimal_inaccurate
+point  86 eps working :  0
+Status :  optimal_inaccurate
+point  86 eps working :  0
+Status :  optimal_inaccurate
+point  86 eps working :  0
+Status :  optimal
+point  86 eps working :  0
+Status :  optimal
+point  86 eps working :  0
+Status :  optimal
+point  86 eps working :  0.12059183418750763
+Status :  optimal
+point  86 eps working :  0.12059183418750763
+Status :  optimal
+point  86 eps working :  0.12059183418750763
+Status :  optimal
+point  86 eps working :  0.13566581346094608
+Status :  optimal
+point  86 eps working :  0.13566581346094608
+87
+Status :  optimal_inaccurate
+point  87 eps working :  0
+Status :  optimal_inaccurate
+point  87 eps working :  0
+Status :  optimal_inaccurate
+point  87 eps working :  0
+Status :  optimal
+point  87 eps working :  0
+Status :  optimal
+point  87 eps working :  0
+Status :  optimal
+point  87 eps working :  0
+Status :  optimal
+point  87 eps working :  0
+Status :  optimal
+point  87 eps working :  0.03717036545276642
+Status :  optimal
+point  87 eps working :  0.03717036545276642
+Status :  optimal
+point  87 eps working :  0.04646295681595802
+88

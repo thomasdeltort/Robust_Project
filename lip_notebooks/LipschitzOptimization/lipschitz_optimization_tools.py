@@ -7,17 +7,17 @@ import matplotlib.pyplot as plt
 import cvxpy as cp
 
 
-def function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1):
+def function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape = (1,28,28), L=1):
     # function we want to optimize, combination of lipschitz constraints in all yi
     outputs = []
     for i in range(len(y_list)):
         if label == 0:
-            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] +\
+            output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] +\
                 L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
             outputs.append(output)
             # concave
         else:
-            output = model(y_list[i].reshape((1,28,28))[None]).cpu().detach().numpy()[0,0] -\
+            output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] -\
                 L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
             outputs.append(output)   
             # convexe
@@ -87,7 +87,7 @@ def create_difference_model(base_model, label, i):
     
     return difference_model
 
-def get_local_maximum(x_sample, label, eps, y_list, model, L=1):
+def get_local_maximum(x_sample, label, eps, y_list, model, input_shape = (1,28,28), L=1):
     l = x_sample-eps
     u = x_sample+eps
 
@@ -98,34 +98,47 @@ def get_local_maximum(x_sample, label, eps, y_list, model, L=1):
         W_list.append(W)
         b_list.append(b)
 
-    x = cp.Variable(784)
+    x = cp.Variable(np.prod(input_shape))
     
     constraints = [eps**2 - cp.norm(x - x_sample, 2)**2 >=0]
 
     # Run the optimizer
     if label == 0:
-        obj = cp.Maximize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1))
+        obj = cp.Maximize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape, L=1))
     else:
-        obj = cp.Minimize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, L=1))
+        obj = cp.Minimize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape, L=1))
 
     prob = cp.Problem(obj, constraints)
     # prob.solve(solver='CLARABEL', verbose=True)  # Returns the optimal value.
-    # prob.solve(solver='ECOS', verbose=True)  # Returns the optimal value.
-    prob.solve(solver='SCS', verbose=True)  # Returns the optimal value.
+    # prob.solve(solver='ECOS', verbose=False)  # Returns the optimal value.
+    prob.solve(solver='SCS', verbose=False)  # Returns the optimal value.
     return prob.status, prob.value, x.value
 
 
-def get_local_maximum_multiclass(x_sample, label, eps, y_list, model, L=1):
+def get_local_maximum_multiclass(x_sample, label, eps, y_list, model, input_shape = (1,28,28), L=1):
     """
     Adaptation du getlocalmaximum au cas multiclasse. On vient borner fgt - fi qui est une fonction racine de 2 lip
     """
     n_classes = model.output_shape[-1]
-    print(type(range(n_classes)))
     list_outputs = list(range(n_classes))
     # print(list_outputs)
     list_outputs.remove(label)
     # print(list_outputs)
     # print(K.argsort(model(x.reshape((1,28,28))[None]))[:,-2])
-    difference_model = create_difference_model(model, label, K.argsort(model(x_sample.reshape((1,28,28))[None]))[:,-2])
+    difference_model = create_difference_model(model, label, K.argsort(model(x_sample.reshape(input_shape)[None]))[:,-2])
 
-    return  get_local_maximum(x_sample, 1, eps, y_list, difference_model, L=np.sqrt(2)*L)   
+    return  get_local_maximum(x_sample, 1, eps, y_list, difference_model, input_shape = input_shape, L=np.sqrt(2)*L)  
+
+# def get_local_maximum_multiclass_CIFAR10(x_sample, label, eps, y_list, model, L=1):
+#     """
+#     Adaptation du getlocalmaximum au cas multiclasse. On vient borner fgt - fi qui est une fonction racine de 2 lip
+#     """
+#     n_classes = model.output_shape[-1]
+#     list_outputs = list(range(n_classes))
+#     # print(list_outputs)
+#     list_outputs.remove(label)
+#     # print(list_outputs)
+#     # print(K.argsort(model(x.reshape((1,28,28))[None]))[:,-2])
+#     difference_model = create_difference_model(model, label, K.argsort(model(x_sample.reshape((3,32,32))[None]))[:,-2])
+
+#     return  get_local_maximum(x_sample, 1, eps, y_list, difference_model, L=np.sqrt(2)*L)    

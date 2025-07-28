@@ -1,0 +1,4 @@
+python Pess_Opt_Radius_FashionMNIST_v2.py
+python LipschitzOptimization/Lipschitz_Opt_MNIST08.py
+python LipschitzOptimization/Lipschitz_Opt_MNIST.py
+python LipschitzOptimization/Lipschitz_Opt_FMNIST.py
