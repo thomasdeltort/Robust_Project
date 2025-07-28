@@ -9,8 +9,8 @@ from decomon.perturbation_domain import BallDomain
 from decomon import get_lower_noise, get_range_noise, get_upper_noise
 from deel.lip.activations import GroupSort, GroupSort2
 
-from LipschitzOptimization.lipschitz_decomon_tools import get_local_maximum
-from LipschitzOptimization.lipschitz_decomon_tools import get_local_maximum_multiclass, echantillonner_boule_l2_simple, create_difference_model
+from LipschitzOptimization.lipschitz_optimization_tools import get_local_maximum
+from LipschitzOptimization.lipschitz_optimization_tools import get_local_maximum_multiclass, echantillonner_boule_l2_simple, create_difference_model
 # Compute 1-lip certificates
 def compute_certificate(images, model, L=1):    
     values, _ = K.top_k(model(images), k=2)
@@ -121,7 +121,7 @@ def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
             d_up = eps_current
     return eps_working
 
-def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, n_iter = 10):
+def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, n_iter = 10, input_shape = (1,28,28)):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
 
@@ -133,20 +133,48 @@ def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, n_iter
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
         y_list = []
-        for i in range(nb_pts):
+        for _ in range(nb_pts):
             y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-        _, f_adv = get_local_maximum(image, target, eps_current, y_list, model)
+        _, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
 
-        if (target==0 and f_adv<=0) or (target==1 and f_adv>=0):
-            print("working", eps_current, f_adv)
+        # print("Status : ", status)
+
+        if (target==0 and optimum<=0) or (target==1 and optimum>=0):
+            # print("working", eps_current, optimum)
             eps_working = d_low = eps_current
         else:
-            print("not working", eps_current, f_adv)
+            # print("not working", eps_current, optimum)
             d_up = eps_current
+        # print("point ", idx, "eps working : ", eps_working)
             
     return eps_working
 
-def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_pts, n_iter = 10):
+
+def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pts, input_shape = (1,28,28), lip_certificate=0):
+    image = images[idx:idx+1].flatten().detach().cpu().numpy()
+    target = targets[idx:idx+1]
+    lip_certificate = lip_certificate[idx:idx+1]
+
+    eps_current = lip_certificate.detach().cpu().numpy()
+    y_list = []
+    for _ in range(nb_pts):
+        y_list.append(echantillonner_boule_l2_simple(image, eps_current))
+    _, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
+
+    # print("Status : ", status)
+
+    if (target==0 and optimum<=0) or (target==1 and optimum>=0):
+        # print("working", eps_current, optimum)
+        result = 1
+    else:
+        # print("not working", eps_current, optimum)
+        result=0
+    # print("point ", idx, "eps working : ", eps_working)
+            
+    return result
+
+
+def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_pts, n_iter = 10, input_shape = (1,28,28)):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
 
@@ -158,15 +186,34 @@ def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
         y_list = []
-        for i in range(nb_pts):
+        for _ in range(nb_pts):
             y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-        f_adv = get_local_maximum_multiclass(image, target, eps_current, y_list, model)
-
-        if  (f_adv>=0):
-            print("working", eps_current, f_adv)
+        status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, input_shape = input_shape)
+        print('Status : ', status)
+        if  (optimum>=0):
+            # print("working", eps_current, optimum)
             eps_working = d_low = eps_current
         else:
-            print("not working", eps_current, f_adv)
+            # print("not working", eps_current, optimum)
             d_up = eps_current
+        print("point ", idx, "eps working : ", eps_working)
             
     return eps_working
+
+def single_compute_relaxation_radius_multiclass_accuracy(idx, images, targets, model, nb_pts, input_shape = (1,28,28), lip_certificate=0):
+    image = images[idx:idx+1].flatten().detach().cpu().numpy()
+    target = targets[idx:idx+1]
+    lip_certificate = lip_certificate[idx:idx+1]
+
+    eps_current = lip_certificate.detach().cpu().numpy()
+    y_list = []
+    for _ in range(nb_pts):
+        y_list.append(echantillonner_boule_l2_simple(image, eps_current))
+    status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, input_shape = input_shape)
+    print('Status : ', status, optimum)
+    if  (optimum>=0):
+        result=1
+    else:
+            # print("not working", eps_current, optimum)
+       result=0  
+    return result

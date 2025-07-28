@@ -38,27 +38,6 @@ if __name__ == "__main__":
     model.load_state_dict(weights)
     model.eval()
 
-    # print("test part :")
-    # model.to(device)
-    # total_correct,total_loss = 0, 0
-    #     #all_logits, all_labels = [], []
-    # for images, labels in test_loader:
-    #     images, labels = images.to(device), labels.to(device)
-    #     labels_onehot = nn.functional.one_hot(labels, 10)
-
-    #     with torch.no_grad():
-    #         logits = model(images)
-    #         total_correct += (logits.argmax(dim=1) == labels).sum().item()
-
-    #                 #total_adv_correct += (adv_logits.argmax(dim=1) == labels).sum().item()
-    # model.eval()
-    #             #all_logits = torch.cat(all_logits)
-    #             #all_labels = torch.cat(all_labels)
-
-    # test_accuracy = 100 * total_correct / len(test_loader.dataset)
-    # print(test_accuracy)
-
-
    
     output_dir = "./benchmark_dataset"
     images_path = os.path.join(output_dir, "images.pkl")

@@ -93,11 +93,11 @@ if __name__ == "__main__":
         }
         
         # Append to CSV file without rewriting the header
-        # pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
+        pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
         
         # Append to the list for Pickle
-        # df_list.append(row)
+        df_list.append(row)
         
         # Save to Pickle at each iteration
-        # pd.DataFrame(df_list).to_pickle(pkl_path)
+        pd.DataFrame(df_list).to_pickle(pkl_path)
 

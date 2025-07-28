@@ -17,3 +17,4 @@ lip_models/
 lip_notebooks/notebooks_creation_models/data
 lip_notebooks/notebooks_creation_models/cifar10_lipschitz_model.pth
 liresnet
+lip_notebooks/LipschitzOptimization/data/cifar-10-python.tar.gz
