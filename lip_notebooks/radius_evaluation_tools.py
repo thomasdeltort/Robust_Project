@@ -159,16 +159,16 @@ def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pt
     y_list = []
     for _ in range(nb_pts):
         y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-    _, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
+    status, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
 
-    # print("Status : ", status)
+    print('Status : ', status, optimum)
 
     if (target==0 and optimum<=0) or (target==1 and optimum>=0):
         # print("working", eps_current, optimum)
         result = 1
     else:
         # print("not working", eps_current, optimum)
-        result=0
+        result = 0
     # print("point ", idx, "eps working : ", eps_working)
             
     return result
@@ -189,12 +189,12 @@ def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_
         for _ in range(nb_pts):
             y_list.append(echantillonner_boule_l2_simple(image, eps_current))
         status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, input_shape = input_shape)
-        print('Status : ', status)
+        print('Status : ', status, optimum)
         if  (optimum>=0):
-            # print("working", eps_current, optimum)
+            print("working", eps_current, optimum)
             eps_working = d_low = eps_current
         else:
-            # print("not working", eps_current, optimum)
+            print("not working", eps_current, optimum)
             d_up = eps_current
         print("point ", idx, "eps working : ", eps_working)
             
@@ -206,6 +206,7 @@ def single_compute_relaxation_radius_multiclass_accuracy(idx, images, targets, m
     lip_certificate = lip_certificate[idx:idx+1]
 
     eps_current = lip_certificate.detach().cpu().numpy()
+    print("certificate ", lip_certificate)
     y_list = []
     for _ in range(nb_pts):
         y_list.append(echantillonner_boule_l2_simple(image, eps_current))

@@ -1,43 +1,44 @@
 import os
-os.environ["KERAS_BACKEND"] = "torch"
-import keras
-import keras.ops as K
-from keras.layers import Input, Flatten, Dense, TorchModuleWrapper
-from keras.optimizers import Adam
-from keras.metrics import BinaryAccuracy
+# os.environ["KERAS_BACKEND"] = "torch"
+# import keras
+# import keras.ops as K
+# from keras.layers import Input, Flatten, Dense, TorchModuleWrapper
+# from keras.optimizers import Adam
+# from keras.metrics import BinaryAccuracy
 
-# from keras.models import Sequential
-from deel.lip.model import Sequential
+# # from keras.models import Sequential
+# from deel.lip.model import Sequential
 
-from deel.lip.layers import (
-    SpectralDense,
-    SpectralConv2D,
-    ScaledL2NormPooling2D,
-    FrobeniusDense,
-)
-from deel.lip.activations import GroupSort, GroupSort2
-from deel.lip.losses import HKR, KR, HingeMargin, MulticlassHKR, MulticlassKR
+# from deel.lip.layers import (
+#     SpectralDense,
+#     SpectralConv2D,
+#     ScaledL2NormPooling2D,
+#     FrobeniusDense,
+# )
+# from deel.lip.activations import GroupSort, GroupSort2
+# from deel.lip.losses import HKR, KR, HingeMargin, MulticlassHKR, MulticlassKR
 
 import numpy as np
-import decomon
 import pandas as pd
 import csv  # Added import
 import time # Added import
 import yaml
 import torch
+import pdb
 import pickle
-from lipschitz_optimization_tools import get_local_maximum_multiclass, echantillonner_boule_l2_simple, create_difference_model
+from lipschitz_optimization_tools_torch import get_local_maximum_multiclass, echantillonner_boule_l2_simple
 
 import sys
 sys.path.append('..')
 
-from radius_evaluation_tools import single_compute_relaxation_radius_multiclass_accuracy
+# from radius_evaluation_tools import single_compute_relaxation_radius_multiclass_accuracy
 from data_processing import load_data, select_data_for_radius_evaluation
-from radius_evaluation_tools import compute_binary_certificate, starting_point_dichotomy
-from radius_evaluation_tools_torch import compute_certificate_LiResNet
+# from radius_evaluation_tools import compute_binary_certificate, starting_point_dichotomy
+from radius_evaluation_tools_torch import compute_certificate_LiResNet,single_compute_relaxation_radius_multiclass, single_compute_relaxation_radius_multiclass_accuracy
 
 sys.path.append('/home/aws_install/robustess_project')
 import liresnet.models as models
+
 
 if __name__ == "__main__":
 
@@ -54,9 +55,6 @@ if __name__ == "__main__":
     model.load_state_dict(weights)
     model.eval()
 
-    layer_torch = TorchModuleWrapper(model)
-    k_model = keras.models.Sequential([Input((3,32,32)), layer_torch])
-
     print("loading data :")
     output_dir = "./../benchmark_dataset"
     images_path = os.path.join(output_dir, "images.pkl")
@@ -67,19 +65,32 @@ if __name__ == "__main__":
 
     # Load the images tensor
     with open(images_path, 'rb') as f:
-            images = pickle.load(f)
+        images = pickle.load(f)
 
     # Load the targets tensor
     with open(targets_path, 'rb') as f:
         labels = pickle.load(f)
 
-    print("Generating Certificates :")
-    lip_radius = compute_certificate_LiResNet(images, model).to(device)
+    # layer_torch = TorchModuleWrapper(model)
+    # keras_model = LiResNet(model=model)
+    # k_model = keras.models.Sequential([Input((3,32,32)), layer_torch])
+    
+    # k_model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
+
+    # print(model(torch.ones_like(images[:1]).to(device)), k_model(torch.ones_like(images[:1])), keras_model(torch.ones_like(images[:1]).to(device)))
+    # pdb.set_trace()
+    # print(END)
+
+    print("Generating Certificates :")
+    lip_radius = compute_certificate_LiResNet(images.to(device), model).squeeze(1)
+    # print(lip_radius[:10])
+    # print(END)
+    # pdb.set_trace()
     # 1. Define paths and parameters
     input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_CIFAR10_liresnet.csv"
-    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_CIFAR10_liresnet_Relaxation.csv"
-    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_CIFAR10_liresnet_Relaxation.pkl"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_CIFAR10_liresnet_Relaxation_complete.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_CIFAR10_liresnet_Relaxation_complete.pkl"
 
     total_points = images.shape[0]
     nb_pts = 100
@@ -105,7 +116,9 @@ if __name__ == "__main__":
         print(f"Processing point {i+1}/{total_points}...")
 
         # Your calculation function
-        eps_working = single_compute_relaxation_radius_multiclass_accuracy(i, images, labels, k_model, nb_pts, input_shape=(3,32,32), lip_certificate=lip_radius)
+        eps_working = single_compute_relaxation_radius_multiclass_accuracy(i, images, labels, model, nb_pts, device=device, input_shape=(3,32,32), lip_certificate=lip_radius)
+        # eps_working = single_compute_relaxation_radius_multiclass(i, images, labels, model, nb_pts, device = device, input_shape=(3,32,32))
+        
         
         # Store result for the pickle file
         list_for_pickle.append(eps_working)

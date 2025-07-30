@@ -59,9 +59,13 @@ if __name__ == "__main__":
 
     total_points = images.shape[0]
 
+    print(model(torch.ones_like(images[:1]).to(device)))
+    print(END)
 
     print("Generating Certificates :")
     lip_radius = compute_certificate_LiResNet(images, model).to(device)
+    # print(lip_radius[:10], model(torch.ones_like(images[:1])))
+    
     # pdb.set_trace()
     # Initialize the CSV file with column headers
     columns = ["Index", "Label_GT", "Predicted_Label", "Lipschitz_Constant", "Robust_Epsilon", "Adv_Epsilon_AA", "Adv_Epsilon_PGD"]

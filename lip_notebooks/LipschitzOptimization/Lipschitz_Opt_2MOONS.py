@@ -1,39 +1,39 @@
 import os
-os.environ["KERAS_BACKEND"] = "torch"
-import keras
-import keras.ops as K
-from keras.layers import Input, Flatten, Dense, TorchModuleWrapper
-from keras.optimizers import Adam
-from keras.metrics import BinaryAccuracy
+# os.environ["KERAS_BACKEND"] = "torch"
+# import keras
+# import keras.ops as K
+# from keras.layers import Input, Flatten, Dense, TorchModuleWrapper
+# from keras.optimizers import Adam
+# from keras.metrics import BinaryAccuracy
 
-# from keras.models import Sequential
-from deel.lip.model import Sequential
+# # from keras.models import Sequential
+# from deel.lip.model import Sequential
 
-from deel.lip.layers import (
-    SpectralDense,
-    SpectralConv2D,
-    ScaledL2NormPooling2D,
-    FrobeniusDense,
-)
-from deel.lip.activations import GroupSort, GroupSort2
-from deel.lip.losses import HKR, KR, HingeMargin, MulticlassHKR, MulticlassKR
+# from deel.lip.layers import (
+#     SpectralDense,
+#     SpectralConv2D,
+#     ScaledL2NormPooling2D,
+#     FrobeniusDense,
+# )
+# from deel.lip.activations import GroupSort, GroupSort2
+# from deel.lip.losses import HKR, KR, HingeMargin, MulticlassHKR, MulticlassKR
 
 import numpy as np
-import decomon
+# import decomon
 import pandas as pd
 import csv  # Added import
 import time # Added import
 import yaml
 import torch
 import pickle
-from lipschitz_optimization_tools import get_local_maximum_multiclass, echantillonner_boule_l2_simple, create_difference_model
+from lipschitz_optimization_tools_torch import get_local_maximum_multiclass, echantillonner_boule_l2_simple
 
 import sys
 sys.path.append('..')
 
-from radius_evaluation_tools import single_compute_relaxation_radius_accuracy
+from radius_evaluation_tools_torch import single_compute_relaxation_radius_accuracy
 from data_processing import load_data, select_data_for_radius_evaluation
-from radius_evaluation_tools import compute_binary_certificate, starting_point_dichotomy
+from radius_evaluation_tools_torch import compute_binary_certificate, starting_point_dichotomy
 from notebooks_creation_models.VGG_Arthur import *
 from radius_evaluation_tools_torch import compute_binary_certificate
 
@@ -139,18 +139,18 @@ if __name__ == "__main__":
 
     print("loading model :")
     model, wrapped_model = load_models(device)
-    model.load_state_dict(torch.load("./../lip_models/FC_2MOONS_Lip.pt", weights_only=False))
+    model.load_state_dict(torch.load("/home/aws_install/robustess_project/lip_models/FC_2MOONS_Lip.pt", weights_only=True))
     model.eval()
-    wrapped_model.load_state_dict(torch.load("./../lip_models/FC_2MOONS_WrappedModel_Lip.pt", weights_only=False))
+    wrapped_model.load_state_dict(torch.load("/home/aws_install/robustess_project/lip_models/FC_2MOONS_WrappedModel_Lip.pt", weights_only=True))
     wrapped_model.eval()
 
-    layer_torch = TorchModuleWrapper(model)
-    k_model = keras.models.Sequential([Input((3,32,32)), layer_torch])
+    # layer_torch = TorchModuleWrapper(model)
+    # k_model = keras.models.Sequential([Input((2,)), layer_torch])
 
     print("Loading Sample :")
    
     # Define the directory and file paths
-    output_dir = "./benchmark_dataset_2MOONS"
+    output_dir = "./../benchmark_dataset_2MOONS"
     images_path = os.path.join(output_dir, "images.pkl")
     targets_path = os.path.join(output_dir, "targets.pkl")
 
@@ -170,8 +170,8 @@ if __name__ == "__main__":
 
     # 1. Define paths and parameters
     input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_2MOONS.csv"
-    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_2MOONS_Relaxation.csv"
-    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_2MOONS_Relaxation.pkl"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_2MOONS_Relaxation_complete.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_2MOONS_Relaxation_complete.pkl"
 
     total_points = images.shape[0]
     nb_pts = 100
@@ -197,7 +197,7 @@ if __name__ == "__main__":
         print(f"Processing point {i+1}/{total_points}...")
 
         # Your calculation function
-        eps_working = single_compute_relaxation_radius_accuracy(i, images, labels, k_model, nb_pts, input_shape=(3,32,32), lip_certificate=lip_radius)
+        eps_working = single_compute_relaxation_radius_accuracy(i, images, labels, model, nb_pts, device=device, input_shape=(2,), lip_certificate=lip_radius)
         
         # Store result for the pickle file
         list_for_pickle.append(eps_working)

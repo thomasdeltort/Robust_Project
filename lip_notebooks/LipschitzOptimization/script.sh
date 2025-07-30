@@ -1,1 +1,2 @@
-python Lipschitz_Opt_multiclass.py
+python Lipschitz_Opt_VGG.py
+python Lipschitz_Opt_LiResNet.py
