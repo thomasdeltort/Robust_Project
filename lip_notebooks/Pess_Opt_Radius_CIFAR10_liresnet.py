@@ -60,7 +60,6 @@ if __name__ == "__main__":
     total_points = images.shape[0]
 
     print(model(torch.ones_like(images[:1]).to(device)))
-    print(END)
 
     print("Generating Certificates :")
     lip_radius = compute_certificate_LiResNet(images, model).to(device)
