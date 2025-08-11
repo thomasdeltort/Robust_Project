@@ -85,6 +85,7 @@ def single_compute_optimistic_radius_AA_binary(idx, images, targets, certificate
             d_low = eps_current
         else:
             eps_working = d_up = (image - adv_image).square().sum(dim=(1, 2, 3)).sqrt()
+            print("working :", eps_working)
     return eps_working
 
 class DecomonGroupSort2(DecomonLayer):
@@ -121,7 +122,7 @@ def single_compute_decomon_radius(idx, images, targets, model, n_iter = 10):
             d_up = eps_current
     return eps_working
 
-def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, n_iter = 10, input_shape = (1,28,28)):
+def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, bounds="concave", n_iter = 10, input_shape = (1,28,28)):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
 
@@ -132,25 +133,25 @@ def single_compute_relaxation_radius(idx, images, targets, model, nb_pts, n_iter
     eps_working = d_low = 0
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
-        y_list = []
+        y_list = [image]
         for _ in range(nb_pts):
             y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-        _, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
+        _, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, bounds=bounds, input_shape = input_shape)
 
         # print("Status : ", status)
 
         if (target==0 and optimum<=0) or (target==1 and optimum>=0):
-            # print("working", eps_current, optimum)
+            print("working", eps_current, optimum)
             eps_working = d_low = eps_current
-        else:
-            # print("not working", eps_current, optimum)
+        else: 
+            print("not working", eps_current, optimum)
             d_up = eps_current
-        # print("point ", idx, "eps working : ", eps_working)
+        print("point ", idx, "eps working : ", eps_working)
             
     return eps_working
 
 
-def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pts, input_shape = (1,28,28), lip_certificate=0):
+def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pts, bounds="concave", input_shape = (1,28,28), lip_certificate=0):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
     lip_certificate = lip_certificate[idx:idx+1]
@@ -159,7 +160,7 @@ def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pt
     y_list = []
     for _ in range(nb_pts):
         y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-    status, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, input_shape = input_shape)
+    status, optimum, _ = get_local_maximum(image, target, eps_current, y_list, model, bounds=bounds, input_shape = input_shape)
 
     print('Status : ', status, optimum)
 
@@ -174,7 +175,7 @@ def single_compute_relaxation_radius_accuracy(idx, images, targets, model, nb_pt
     return result
 
 
-def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_pts, n_iter = 10, input_shape = (1,28,28)):
+def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_pts, bounds="concave", n_iter = 10, input_shape = (1,28,28)):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
 
@@ -185,10 +186,10 @@ def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_
     eps_working = d_low = 0
     for _ in range(n_iter):
         eps_current = (d_up+d_low)/2
-        y_list = []
+        y_list = [image]
         for _ in range(nb_pts):
             y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-        status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, input_shape = input_shape)
+        status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, bounds=bounds, input_shape = input_shape)
         print('Status : ', status, optimum)
         if  (optimum>=0):
             print("working", eps_current, optimum)
@@ -200,7 +201,7 @@ def single_compute_relaxation_radius_multiclass(idx, images, targets, model, nb_
             
     return eps_working
 
-def single_compute_relaxation_radius_multiclass_accuracy(idx, images, targets, model, nb_pts, input_shape = (1,28,28), lip_certificate=0):
+def single_compute_relaxation_radius_multiclass_accuracy(idx, images, targets, model, nb_pts, bounds="concave", input_shape = (1,28,28), lip_certificate=0):
     image = images[idx:idx+1].flatten().detach().cpu().numpy()
     target = targets[idx:idx+1]
     lip_certificate = lip_certificate[idx:idx+1]
@@ -210,7 +211,7 @@ def single_compute_relaxation_radius_multiclass_accuracy(idx, images, targets, m
     y_list = []
     for _ in range(nb_pts):
         y_list.append(echantillonner_boule_l2_simple(image, eps_current))
-    status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, input_shape = input_shape)
+    status, optimum, _ = get_local_maximum_multiclass(image, target, eps_current, y_list, model, bounds=bounds, input_shape = input_shape)
     print('Status : ', status, optimum)
     if  (optimum>=0):
         result=1

@@ -135,7 +135,7 @@ def convert_weights_dynamically_cnn(keras_model, pytorch_model):
             # PyTorch Linear weight shape: (out_features, in_features)
             # We need to transpose the Keras weights.
             pt_module.weight.data.copy_(torch.from_numpy(k_w.T))
-
+            # import pdb ; pdb.set_trace()
         # --- Case 2: Handle Conv2D -> Conv2d layers ---
         elif isinstance(k_layer, Conv2D) and isinstance(pt_module, nn.Conv2d):
             if k_layer.use_bias:
@@ -150,7 +150,7 @@ def convert_weights_dynamically_cnn(keras_model, pytorch_model):
 
             ### TODO PROBLEM HERE
             pt_module.weight.data.copy_(torch.from_numpy(k_w_transposed))
-            import pdb ; pdb.set_trace()
+            # import pdb ; pdb.set_trace()
             ### HERE
 
         # --- Case 3: Handle mismatched layer types ---
@@ -256,6 +256,7 @@ def check_first_conv_weights(keras_model, pytorch_model):
 
     # 3. Extract Keras weights
     k_weights = first_keras_conv.get_weights()
+    # k_kernel = np.transpose(k_weights[0], (3, 2, 0, 1))
     k_kernel = k_weights[0]
     k_bias = k_weights[1] if first_keras_conv.use_bias else None
 
@@ -390,26 +391,12 @@ class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
         pooled = torch.sqrt(sum_squared + 1e-8)
         
         # 5. Apply the Lipschitz scaling factor.
-        return pooled * self._coefficient_lip * self.scalingFactor
+        return pooled * self._coefficient_lip 
+    # * self.scalingFactor
         
     def __repr__(self):
         return (f"ScaledL2NormPool2d(kernel_size={self.kernel_size}, "
                 f"stride={self.stride}, k_coef_lip={self._coefficient_lip})")
-
-    # def vanilla_export(self):
-    #     # # The vanilla export should now also return a standard LPPool2d
-    #     # # for compatibility if needed elsewhere.
-    #     # if self._coefficient_lip == 1.0:
-    #     #     return torch.nn.LPPool2d(
-    #     #         2,  # Norm 2
-    #     #         kernel_size=self.kernel_size,
-    #     #         stride=self.stride,
-    #     #         ceil_mode=self.ceil_mode,
-    #     #     )
-    #     # else:
-    #     #     # If the coefficient is not 1, a direct export to a single standard layer
-    #     #     # is not possible. Returning self is a reasonable fallback.
-    #         return self
     
     def vanilla_export(self) -> nn.Module:
         """
@@ -521,3 +508,261 @@ class ScaledAdaptiveL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModul
             output_size=self.output_size,
             coeff=self._coefficient_lip
         )
+    
+def debug_and_compare_submodels(vanilla_model, pytorch_model, test_tensor):
+    """
+    Compares the output of Keras and PyTorch models layer by layer.
+
+    Args:
+        vanilla_model (keras.Model): The full Keras model. UNFOLDED !!
+        pytorch_model (torch.nn.Module): The full PyTorch model.
+        test_tensor_nchw (torch.Tensor): A test input tensor in NCHW format.
+    """
+    pt_layers = list(pytorch_model.children())
+    kr_layers = vanilla_model.layers
+    
+    # Ensure the number of layers match.
+    # Note: Keras might have an InputLayer at the beginning, which we can skip.
+    if isinstance(kr_layers[0], keras.layers.InputLayer):
+        kr_layers = kr_layers[1:]
+        
+    assert len(pt_layers) == len(kr_layers), \
+        f"Layer count mismatch! PyTorch: {len(pt_layers)}, Keras: {len(kr_layers)}"
+
+    num_layers = len(pt_layers)
+    print(f"\n--- Starting Layer-by-Layer Comparison ({num_layers} layers) ---\n")
+
+    # --- THIS IS THE CORRECTED LINE ---
+    # Get the input shape from the model itself, not the first layer.
+    input_shape = vanilla_model.input_shape[1:] # e.g., (28, 28, 1)
+
+    for k in range(num_layers, 0, -1):
+        print(f"================== COMPARING FIRST {k} LAYERS ==================")
+
+       
+        
+        # --- Create PyTorch Sub-Model ---
+        sub_pt_model = nn.Sequential(*pt_layers[:k])
+        sub_pt_model.eval()
+        print(sub_pt_model)
+        
+        # --- Create Keras Sub-Model ---
+        # We need to add an Input layer that matches the expected format.
+        # The input shape to the first layer in the original model tells us what's needed.
+        sub_kr_model = keras.Sequential([keras.layers.Input(shape=input_shape)] + kr_layers[:k])
+        sub_kr_model.summary()
+        try:
+            # --- Get Outputs ---
+            pt_output = sub_pt_model(test_tensor)
+            kr_output = sub_kr_model(test_tensor)
+            
+            # Convert Keras output (TensorFlow tensor) to a PyTorch tensor
+            kr_output = torch.from_numpy(kr_output.detach().cpu().numpy())
+
+            # Reshape PyTorch output if needed (e.g., after a Conv layer) to match Keras
+            # Keras Conv2D output is NHWC, PyTorch is NCHW.
+            # We'll flatten both to compare them reliably regardless of shape.
+            pt_flat = pt_output.flatten()
+            kr_flat = kr_output.flatten()
+
+            # --- Compare and Print ---
+            print(f"PyTorch sub-model output shape: {list(pt_output.shape)}")
+            print(f"Keras sub-model output shape:   {list(kr_output.shape)}")
+            
+            # If shapes don't match after a conv layer, it's likely a CWH/HWC issue
+            if len(pt_output.shape) == 4 and pt_output.shape[1] != kr_output.shape[1]:
+                 # Permute PyTorch from NCHW to NHWC for direct comparison
+                 kr_flat = kr_output.permute(0, 3, 1, 2).flatten()
+
+
+            print(f"\nPyTorch Output (first 8 values): {pt_flat[:8].tolist()}")
+            print(f"Keras   Output (first 8 values): {kr_flat[:8].tolist()}")
+
+            # Calculate L2 distance (Euclidean distance)
+            distance = torch.dist(pt_flat, kr_flat)
+            print(f"\n---> L2 Distance between outputs: {distance.item():.6f}\n")
+            # if k==6:
+            #     import pdb;pdb.set_trace()
+
+        except Exception as e:
+            print(f"!!! Error comparing at k={k}: {e}")
+            print("This could be due to an input shape mismatch for this specific sub-model.\n")
+
+
+def unfold_keras_model(model_to_unfold):
+    """
+    Rebuilds a Keras model to have separate activation layers.
+
+    Args:
+        model_to_unfold (keras.Model): The original Keras model with integrated activations.
+
+    Returns:
+        keras.Model: A new model with a 1-to-1 layer structure similar to PyTorch.
+    """
+    print("--- Unfolding Keras model to separate activation layers ---")
+    
+    # Use the Functional API to build a new graph
+    input_tensor = keras.Input(shape=model_to_unfold.input_shape[1:], name="unfolded_input")
+    x = input_tensor
+    
+    new_layers = []
+
+    for layer in model_to_unfold.layers:
+        # Skip the original input layer if it exists
+        if isinstance(layer, keras.layers.InputLayer):
+            continue
+        # --- EXISTING LOGIC FOR ACTIVATIONS ---
+        if hasattr(layer, 'activation') and layer.activation is not None and layer.activation != keras.activations.get('linear'):
+            print(f"Found and unfolding bundled activation in layer: {layer.name}")
+            config = layer.get_config()
+            print("1")
+            activation_fn_or_layer = layer.activation
+            print("2")
+            config['activation'] = 'linear'
+            print("3")
+            base_layer = layer.__class__.from_config(config)
+            x = base_layer(x)
+            base_layer.set_weights(layer.get_weights())
+            x = activation_fn_or_layer(x)
+            new_layers.append(base_layer)
+            if isinstance(activation_fn_or_layer, keras.layers.Layer):
+                 new_layers.append(activation_fn_or_layer)
+            else:
+                 new_layers.append(keras.layers.Activation(activation_fn_or_layer))
+        
+        # --- LOGIC FOR ALL OTHER LAYERS ---
+        else:
+            x = layer(x)
+            new_layers.append(layer)
+
+    # Create the new model from the input tensor and the final output tensor 'x'
+    unfolded_model = keras.Model(inputs=input_tensor, outputs=x, name="unfolded_model")
+    
+    print("Unfolded model summary:")
+    unfolded_model.summary()
+
+    # The model object is what we need, but we can also return the layer list for the debugger
+    return unfolded_model
+
+# https://github.com/keras-team/keras/blob/v3.11.1/keras/src/layers/reshaping/flatten.py#L11  Lines 42-46
+
+
+class FlattenChannelLast(nn.Module):
+    """
+    A custom PyTorch module that flattens a tensor by interleaving the channels,
+    mimicking the behavior of Keras' `Flatten(data_format="channels_last")` on a
+    `channels_first` input tensor.
+
+    It assumes the input tensor is in `channels_first` format (N, C, H, W).
+    It works by first permuting the dimensions to `(N, H, W, C)` and then
+    flattening the last three dimensions.
+
+    Input Shape: (N, C, H, W)
+    Output Shape: (N, C * H * W)
+    """
+    def __init__(self):
+        """
+        Initializes the FlattenChannelLast module.
+        """
+        super().__init__()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Defines the forward pass for the layer.
+
+        Args:
+            x: The input tensor with shape (N, C, H, W).
+
+        Returns:
+            The flattened tensor with shape (N, C * H * W).
+        """
+        # Ensure the input is 4D, which is the expected format
+        if x.dim() != 4:
+            raise ValueError(f"Expected 4D input (got {x.dim()}D input)")
+
+        # Get the batch size to handle variable batch sizes correctly
+        batch_size = x.shape[0]
+
+        # The core logic:
+        # 1. Permute dimensions from (N, C, H, W) -> (N, H, W, C)
+        #    The indices are (0, 2, 3, 1)
+        x_permuted = x.permute(0, 2, 3, 1)
+
+        # 2. Flatten the permuted tensor. `reshape` is generally preferred.
+        #    The `-1` tells PyTorch to calculate the correct size for that dimension.
+        #    This results in a tensor of shape (N, H * W * C).
+        return x_permuted.reshape(batch_size, -1)
+    
+
+def test_flatten():
+    x = keras.random.normal((16,7,7))[None]
+
+    print(Flatten(data_format="channels_first")(x)[:,2]) #group 1
+
+    print(Flatten(data_format="channels_last")(x)[:,2]) #group 2
+
+    print(Flatten()(x)[:,2]) #group 1
+
+    print(nn.Flatten()(x)[:,2]) #group 2
+
+    #Channel first
+    liste = []
+    for i in range(16):
+        for j in range(7):
+            for k in range(7):
+                liste.append(x[:,i, j, k])
+    print(liste[2]) #group 2
+
+    print(x.view(-1)[2]) #group2
+
+
+def evaluate_model(model, device, test_loader):
+    """
+    Evaluates a trained PyTorch model on a given test dataset.
+
+    Args:
+        model (nn.Module): The trained PyTorch model to evaluate.
+        device (torch.device): The device to run the evaluation on (e.g., 'cuda' or 'cpu').
+        test_loader (DataLoader): DataLoader for the test dataset.
+
+    Returns:
+        float: The accuracy of the model on the test set as a percentage.
+    """
+    # 1. Set the model to evaluation mode
+    # This is crucial as it disables layers like Dropout and uses the learned
+    # statistics for Batch Normalization.
+    model = model.to(device)
+    model.eval()
+
+    # 2. Initialize counters
+    test_loss = 0
+    correct = 0
+
+    # 3. Disable gradient calculations
+    # We don't need to calculate gradients for evaluation, which saves memory and computation.
+    with torch.no_grad():
+        # 4. Iterate over the test data
+        for data, target in test_loader:
+            # Move data and target tensors to the specified device
+            data, target = data.to(device), target.to(device)
+
+            # Perform a forward pass
+            output = model(data)
+
+            # Calculate the loss for the batch and add it to the total
+            test_loss += F.nll_loss(output, target, reduction='sum').item()
+
+            # Get the index of the max log-probability (the predicted class)
+            pred = output.argmax(dim=1, keepdim=True)
+
+            # Compare predictions to the true labels and count correct ones
+            correct += pred.eq(target.view_as(pred)).sum().item()
+
+    # 5. Calculate average loss and accuracy
+    test_loss /= len(test_loader.dataset)
+    accuracy = 100. * correct / len(test_loader.dataset)
+
+    # 6. Print the results
+    print(f'\nTest set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)\n')
+
+    return accuracy

@@ -29,7 +29,7 @@ from lipschitz_optimization_tools import get_local_maximum, echantillonner_boule
 import sys
 sys.path.append('..')
 
-from radius_evaluation_tools import single_compute_relaxation_radius_accuracy
+from radius_evaluation_tools import single_compute_relaxation_radius
 
 
 from data_processing import load_data, select_data_for_radius_evaluation_MNIST08
@@ -62,28 +62,30 @@ if __name__ == "__main__":
     images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, model_bis)
 
     total_points = images.shape[0]
-    # 1. Define the headers for your columns
-    input_headers = [
-        "Index",
-        "Label_GT",
-        "Predicted_Label",
-        "Lipschitz_Constant",
-        "Robust_Epsilon",
-        "Adv_Epsilon_AA",
-        "Adv_Epsilon_PGD"
-    ]
-    new_column_header = "Convex_Relaxation_Epsilon"
+    # # 1. Define the headers for your columns
+    # input_headers = [
+    #     "Index",
+    #     "Label_GT",
+    #     "Predicted_Label",
+    #     "Lipschitz_Constant",
+    #     "Robust_Epsilon",
+    #     "Adv_Epsilon_AA",
+    #     "Adv_Epsilon_PGD",
+    #     # "Convex_Relaxation_Epsilon",
+    # ]
+    new_column_header = "Constant_Relaxation_Epsilon"
     # The full list of headers for the output file
-    output_headers = input_headers + [new_column_header]
+    # output_headers = input_headers + [new_column_header]
+
 
     # Paths for input and output files
-    input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.csv"
-    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation.csv"
-    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation.pkl"
+    input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.csv"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output_Relaxation_test.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output_Relaxation_test.pkl"
 
     # 2. Load the original input data to read from
-    df_input = pd.read_csv(input_csv_path, header=None, names=input_headers)
-
+    df_input = pd.read_csv(input_csv_path)
+    output_headers = df_input.columns.tolist() + [new_column_header]
     # Parameters for calculation
     total_points = images.shape[0]
     nb_pts = 100
@@ -110,7 +112,7 @@ if __name__ == "__main__":
         print(f"Processing point {i+1}/{total_points}...")
 
         # Your calculation function remains the same
-        eps_working = single_compute_relaxation_radius_accuracy(i, images, labels, model, nb_pts, lip_certificate=lip_radius)
+        eps_working = single_compute_relaxation_radius(i, images, labels, model, nb_pts, bounds="constant")
         
         # Store result for the pickle file later
         list_for_pickle.append(eps_working)
@@ -143,80 +145,5 @@ if __name__ == "__main__":
         average_time = total_execution_time / total_points
         print(f"\nAverage time per point: {average_time:.2f} seconds.")
 
-# # 1. Define the headers for your columns
-# # Headers for the columns in your input CSV
-# input_headers = [
-#     "Index",
-#     "Label_GT",
-#     "Predicted_Label",
-#     "Lipschitz_Constant",
-#     "Robust_Epsilon",
-#     "Adv_Epsilon_AA",
-#     "Adv_Epsilon_PGD"
-# ]
-# # Header for the new column you are calculating
-# new_column_header = "Convex_Relaxation_Epsilon"
 
-# # Initialize the CSV file with column headers
-# input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.csv"
-# input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.pkl"
-# output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation_200pts.csv"
-# output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Relaxation_200pts.pkl"
-
-# nb_pts = 100
-
-# # 1. Load the original data to append results to each row
-# df_input = pd.read_csv(input_csv_path, header=None, names=input_headers)
-
-# # 2. Initialize a list to store results for the final pickle save
-# list_eps = []
-# total_execution_time = 0.0
-# # 3. Open the output CSV file once before the loop
-# with open(output_csv_path, 'w', newline='') as f_output:
-#     writer = csv.writer(f_output)
-    
-#     # 4. Write the header row for the new CSV
-#     num_features = df_input.shape[1]
-#     header = [f'Feature_{j+1}' for j in range(num_features)] + ["Relaxation"]
-#     writer.writerow(header)
-
-
-#     # 5. Loop through each point
-#     for i in range(2): 
-#         start_time = time.time()
-#         print(f"Processing point {i}/{total_points}...")
-#         eps_working = single_compute_relaxation_radius(i, images, labels, model, nb_pts, n_iter=1, input_shape=(1,28,28))
-
-#         end_time = time.time()
-#         duration = end_time - start_time
-#         total_execution_time += duration
-
-#         # Print status with execution time for the current point
-#         print(f"Processing point {i+1}/{total_points}... Time for this point: {duration:.2f} seconds.")
-
-#         list_eps.append(eps_working)
-#         # 6. Get the original data row and append the new result
-#         original_row = df_input.iloc[i].tolist()
-#         new_row = original_row + [eps_working]
-        
-#         # 7. Write the new complete row to the CSV file immediately
-#         writer.writerow(new_row)
-
-
-# # 8. After the loop, add the full list of results to the DataFrame
-# df_input["Relaxation"] = list_eps
-
-# # 9. Save the final, complete DataFrame to a Pickle file
-# df_input.to_pickle(output_pkl_path)
-
-# print(f"\nProcessing complete. Results saved to:\nCSV: {output_csv_path}\nPKL: {output_pkl_path}")
-
-# if total_points > 0:
-#     average_time = total_execution_time / total_points
-#     print(f"\nAverage time per point: {average_time:.2f} seconds.")
-# # df = pd.read_csv(input_csv_path)
-
-# # df["Relaxation"] = list_eps
-# # df.to_pickle(output_pkl_path)
-# # df.to_csv(output_csv_path, mode='a', header=False, index=False)
 

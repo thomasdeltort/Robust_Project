@@ -100,7 +100,7 @@ from lipschitz_optimization_tools import get_local_maximum_multiclass, echantill
 import sys
 sys.path.append('..')
 
-from radius_evaluation_tools import single_compute_relaxation_radius_multiclass_accuracy
+from radius_evaluation_tools import single_compute_relaxation_radius_multiclass
 
 
 from data_processing import load_data, select_data_for_radius_evaluation
@@ -121,8 +121,8 @@ if __name__ == "__main__":
 
     # 1. Define paths and parameters
     input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST.csv"
-    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST_single_output_Relaxation.csv"
-    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST_single_output_Relaxation.pkl"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST_single_output_Relaxation_test.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST_single_output_Relaxation_test.pkl"
 
     total_points = images.shape[0]
     nb_pts = 100
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     # Compute Lipschitz Pessimistic Certificates
     print("Generating Certificates :")
     lip_radius = compute_certificate(images, vanilla_model)
-
+    print(lip_radius)
 
     new_column_header = "Relaxation" # The header for your new column
 
@@ -156,7 +156,7 @@ if __name__ == "__main__":
         print(f"Processing point {i+1}/{total_points}...")
 
         # Your calculation function remains the same
-        eps_working = single_compute_relaxation_radius_multiclass_accuracy(i, images, labels, vanilla_model, nb_pts, input_shape=(1,28,28), lip_certificate=lip_radius)
+        eps_working = single_compute_relaxation_radius_multiclass(i, images, labels, vanilla_model, nb_pts, bounds='constant', input_shape=(1,28,28))
         
         # Store result for the pickle file
         list_for_pickle.append(eps_working)

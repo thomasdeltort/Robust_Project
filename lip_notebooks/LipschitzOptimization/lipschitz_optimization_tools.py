@@ -7,20 +7,56 @@ import matplotlib.pyplot as plt
 import cvxpy as cp
 
 
-def function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape = (1,28,28), L=1):
+# def function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape = (1,28,28), L=1):
+#     # function we want to optimize, combination of lipschitz constraints in all yi
+#     outputs = []
+#     for i in range(len(y_list)):
+#         if label == 0:
+#             output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] +\
+#                 L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
+#             outputs.append(output)
+#             # concave
+#         else:
+#             output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] -\
+#                 L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
+#             outputs.append(output)   
+#             # convexe
+#     if label == 0:
+#         # min(min(concaves)) -> min(concave) -> NON CONVEXE
+#         function = cp.min(cp.hstack(outputs)) 
+#     else:
+#         # min(max(convexes)) -> min(convexe) -> CONVEXE
+#         function = cp.max(cp.hstack(outputs))
+#     return function
+
+def function_to_optimize_all(x, label, W_list, b_list, y_list, model, bounds="concave", input_shape = (1,28,28), L=1):
     # function we want to optimize, combination of lipschitz constraints in all yi
     outputs = []
-    for i in range(len(y_list)):
-        if label == 0:
-            output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] +\
-                L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
-            outputs.append(output)
-            # concave
-        else:
-            output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] -\
-                L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
-            outputs.append(output)   
-            # convexe
+    if bounds=="constant":
+        for i in range(len(y_list)):
+            if label == 0:
+                output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] +\
+                    L*(W_list[i]@x+b_list[i]) #scalar
+                outputs.append(output)
+                # concave
+            else:
+                output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] -\
+                    L*(W_list[i]@x+b_list[i]) #scalar
+                outputs.append(output)   
+                # convexe
+    elif bounds=="concave":
+        for i in range(len(y_list)):
+            if label == 0:
+                output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] +\
+                    L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
+                outputs.append(output)
+                # concave
+            else:
+                output = model(y_list[i].reshape(input_shape)[None]).cpu().detach().numpy()[0,0] -\
+                    L*cp.sqrt(W_list[i]@x+b_list[i]) #scalar
+                outputs.append(output)   
+                # convexe
+
     if label == 0:
         # min(min(concaves)) -> min(concave) -> NON CONVEXE
         function = cp.min(cp.hstack(outputs)) 
@@ -28,6 +64,13 @@ def function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shap
         # min(max(convexes)) -> min(convexe) -> CONVEXE
         function = cp.max(cp.hstack(outputs))
     return function
+
+def constant_bounds(x,y,eps):
+    Plane = np.linalg.norm(x-y) + eps
+    W = np.zeros_like(y)
+    b = Plane[None]
+    return W,b
+
 
 
 def square_backward_bounds(l, u, y):
@@ -87,16 +130,23 @@ def create_difference_model(base_model, label, i):
     
     return difference_model
 
-def get_local_maximum(x_sample, label, eps, y_list, model, input_shape = (1,28,28), L=1):
-    l = x_sample-eps
-    u = x_sample+eps
-
+def get_local_maximum(x_sample, label, eps, y_list, model, bounds = "concave", input_shape = (1,28,28), L=1):
     W_list = []
     b_list = []
-    for y_i in y_list:
-        W, b = square_backward_bounds(l,u,y_i)
-        W_list.append(W)
-        b_list.append(b)
+    if bounds=="concave":
+        l = x_sample-eps
+        u = x_sample+eps
+        for y_i in y_list:
+            W, b = square_backward_bounds(l,u,y_i)
+            W_list.append(W)
+            b_list.append(b)
+    elif bounds=="constant":
+        for y_i in y_list:
+            W, b = constant_bounds(x_sample,y_i, eps)
+            W_list.append(W)
+            b_list.append(b)
+    else:
+        print("Error bounds")
 
     x = cp.Variable(np.prod(input_shape))
     
@@ -104,9 +154,9 @@ def get_local_maximum(x_sample, label, eps, y_list, model, input_shape = (1,28,2
 
     # Run the optimizer
     if label == 0:
-        obj = cp.Maximize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape, L=1))
+        obj = cp.Maximize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, bounds, input_shape, L=L))
     else:
-        obj = cp.Minimize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, input_shape, L=1))
+        obj = cp.Minimize(function_to_optimize_all(x, label, W_list, b_list, y_list, model, bounds, input_shape, L=L))
 
     prob = cp.Problem(obj, constraints)
     # prob.solve(solver='CLARABEL', verbose=True)  # Returns the optimal value.
@@ -115,7 +165,7 @@ def get_local_maximum(x_sample, label, eps, y_list, model, input_shape = (1,28,2
     return prob.status, prob.value, x.value
 
 
-def get_local_maximum_multiclass(x_sample, label, eps, y_list, model, input_shape = (1,28,28), L=1):
+def get_local_maximum_multiclass(x_sample, label, eps, y_list, model, bounds="concave", input_shape = (1,28,28), L=1):
     """
     Adaptation du getlocalmaximum au cas multiclasse. On vient borner fgt - fi qui est une fonction racine de 2 lip
     """
@@ -127,7 +177,7 @@ def get_local_maximum_multiclass(x_sample, label, eps, y_list, model, input_shap
     # print(K.argsort(model(x.reshape((1,28,28))[None]))[:,-2])
     difference_model = create_difference_model(model, label, K.argsort(model(x_sample.reshape(input_shape)[None]))[:,-2])
 
-    return  get_local_maximum(x_sample, 1, eps, y_list, difference_model, input_shape = input_shape, L=np.sqrt(2)*L)  
+    return  get_local_maximum(x_sample, 1, eps, y_list, difference_model, bounds=bounds, input_shape = input_shape, L=np.sqrt(2)*L)  
 
 # def get_local_maximum_multiclass_CIFAR10(x_sample, label, eps, y_list, model, L=1):
 #     """

@@ -26,6 +26,8 @@ import torchattacks
 from robustbench.utils import clean_accuracy
 import pandas as pd
 import pickle
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 
 from abstract_interpretation_tools import *
 
@@ -55,7 +57,33 @@ def load_MNIST08():
     )
     return pytorch_model, vanilla_model
 
-def load_MNIST():
+def load_FMNIST():
+    print("--loading model : --")
+    vanilla_model = keras.models.load_model("/home/aws_install/robustess_project/lip_models/demo4_vanilla_fashionMNIST_channelfirst_False_disj_Neurons.keras")
+    # vanilla_model.compile(
+    #     # decreasing alpha and increasing min_margin improve robustness (at the cost of accuracy)
+    #     # note also in the case of lipschitz networks, more robustness require more parameters.
+    #     loss=MulticlassHKR(alpha=100, min_margin=0.25),
+    #     optimizer=Adam(1e-4),
+    #     metrics=["accuracy", MulticlassKR()],)
+
+    print("--create torch model : --")
+    pytorch_model = torchlip.Sequential(
+        torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding="same"),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2)),
+        torchlip.SpectralConv2d(in_channels=16, out_channels=32, kernel_size=(3, 3), padding="same"),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2)),
+        FlattenChannelLast(),
+        torchlip.SpectralLinear(1568, 64),
+        MaxMin(),
+        torchlip.SpectralLinear(64,10, bias=False),
+    )
+    return pytorch_model, vanilla_model
+
+
+def load_MNIST(evaluation=False):
     print("--loading model : --")
     vanilla_model = keras.models.load_model("/home/aws_install/robustess_project/lip_models/demo0_vanilla_MNIST_channelfirst_False_disj_Neurons.keras")
     vanilla_model.compile(
@@ -70,39 +98,75 @@ def load_MNIST():
     pytorch_model = torchlip.Sequential(
         torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding="same"),
         MaxMin(),
-        ScaledL2NormPool2d((2,2)),
+        ScaledL2NormPool2d((2,2), stride=2),
+        # torchlip.modules.ScaledL2NormPool2d((2,2)),
         torchlip.SpectralConv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), padding="same"),
         MaxMin(),
-        ScaledL2NormPool2d((2,2)),
-        nn.Flatten(),
+        ScaledL2NormPool2d((2,2), stride=2),
+        # torchlip.modules.ScaledL2NormPool2d((2,2)),
+        FlattenChannelLast(),
         torchlip.SpectralLinear(784, 32),
         MaxMin(),
         torchlip.SpectralLinear(32,10, bias=False),
     )
-    return pytorch_model, vanilla_model
+    pytorch_model = pytorch_model.vanilla_export()
+    pytorch_model.eval()
+
+    pytorch_model = convert_weights_dynamically_cnn(vanilla_model, pytorch_model)
+
+    if evaluation :
+        test_vec = torch.ones((1,28,28))[None]
+
+        # debug_and_compare_submodels(vanilla_model_unfolded, pytorch_model, test_vec)
+
+        print(pytorch_model(test_vec), vanilla_model(test_vec))
+    return pytorch_model
+
 
 
 if __name__ == "__main__":
-
-    pytorch_model, vanilla_model = load_MNIST()
-    # Set to evaluation mode
-    pytorch_model = pytorch_model.vanilla_export()
-    pytorch_model.eval()
+    eval_test = False
     
-    pytorch_model = convert_weights_dynamically_cnn(vanilla_model, pytorch_model)
+    pytorch_model = load_MNIST(True)
 
-    # kr_model = keras.Sequential([
-    # keras.layers.Input(shape=(1, 28, 28)),
-    # GroupSort(2)
-    # ])
-    # pt_model = nn.Sequential(MaxMin())
+    # # vanilla_model_unfolded = unfold_keras_model(vanilla_model)
 
-    test_vec = torch.rand((1,28,28))[None]
-    # print(pt_model(test_vec), kr_model(test_vec))
-
-
-    print(pytorch_model(test_vec), vanilla_model(test_vec))
-
-    check_first_conv_weights(vanilla_model, pytorch_model)
-
+    # # vanilla_model_unfolded.summary()
+    # # Set to evaluation mode
+    # pytorch_model = pytorch_model.vanilla_export()
+    # pytorch_model.eval()
     
+    # pytorch_model = convert_weights_dynamically_cnn(vanilla_model, pytorch_model)
+
+   
+    
+
+    # test_vec = torch.ones((1,28,28))[None]
+
+    # # debug_and_compare_submodels(vanilla_model_unfolded, pytorch_model, test_vec)
+
+    # print(pytorch_model(test_vec), vanilla_model(test_vec))
+
+    # if eval_test:
+    #     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    #     transform = transforms.Compose([
+    #         transforms.ToTensor(),
+    #         transforms.Normalize((0.1307,), (0.3081,))
+    #     ])
+
+    #     # --- 2. Load Data ---
+
+    #     # Download and load the MNIST test dataset
+    #     test_dataset = datasets.MNIST(
+    #         root='./data', 
+    #         train=False, 
+    #         download=True,
+    #         transform=transform
+    #     )
+
+    #     # Create a DataLoader to handle batching of the test data
+    #     test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
+
+    #     accuracy = evaluate_model(pytorch_model, device, test_loader)
+
+    #     print(accuracy)
