@@ -2,15 +2,15 @@ import os
 os.environ["KERAS_BACKEND"] = "torch"
 
 import keras
-from deel.lip.layers import (
-    SpectralDense,
-    SpectralConv2D,
-    ScaledL2NormPooling2D,
-    FrobeniusDense,
-)
-from deel.lip.model import Sequential
-from deel.lip.activations import GroupSort
-from deel.lip.losses import MulticlassHKR, MulticlassKR
+# from deel.lip.layers import (
+#     SpectralDense,
+#     SpectralConv2D,
+#     ScaledL2NormPooling2D,
+#     FrobeniusDense,
+# )
+# from deel.lip.model import Sequential
+# from deel.lip.activations import GroupSort
+# from deel.lip.losses import MulticlassHKR, MulticlassKR
 from keras.layers import Input, Flatten
 from keras.optimizers import Adam
 from keras.datasets import fashion_mnist, mnist

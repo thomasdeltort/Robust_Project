@@ -55,6 +55,7 @@ def echantillonner_boule_l2_simple(x, epsilon, uniform = False):
         r = epsilon * s**(1/d) 
     else:
         r = epsilon * s
+    print(r)
     # 3. Point final = centre + direction_normalisée * distance
     y = x + r * (u / norm_u)
 

@@ -55,7 +55,13 @@ def load_MNIST08():
         MaxMin(),
         torchlip.SpectralLinear(in_features=16, out_features=1),
     )
-    return pytorch_model, vanilla_model
+
+    pytorch_model = pytorch_model.vanilla_export()
+    pytorch_model.eval()
+
+    pytorch_model = convert_weights_dynamically_dense(vanilla_model, pytorch_model)
+
+    return pytorch_model
 
 def load_FMNIST():
     print("--loading model : --")
@@ -80,18 +86,23 @@ def load_FMNIST():
         MaxMin(),
         torchlip.SpectralLinear(64,10, bias=False),
     )
-    return pytorch_model, vanilla_model
+    pytorch_model = pytorch_model.vanilla_export()
+    pytorch_model.eval()
+
+    pytorch_model = convert_weights_dynamically_cnn(vanilla_model, pytorch_model)
+
+    return pytorch_model
 
 
 def load_MNIST(evaluation=False):
     print("--loading model : --")
     vanilla_model = keras.models.load_model("/home/aws_install/robustess_project/lip_models/demo0_vanilla_MNIST_channelfirst_False_disj_Neurons.keras")
-    vanilla_model.compile(
-        # decreasing alpha and increasing min_margin improve robustness (at the cost of accuracy)
-        # note also in the case of lipschitz networks, more robustness require more parameters.
-        loss=MulticlassHKR(alpha=50, min_margin=0.05),
-        optimizer=Adam(1e-3),
-        metrics=["accuracy", MulticlassKR()],)
+    # vanilla_model.compile(
+    #     # decreasing alpha and increasing min_margin improve robustness (at the cost of accuracy)
+    #     # note also in the case of lipschitz networks, more robustness require more parameters.
+    #     loss=MulticlassHKR(alpha=50, min_margin=0.05),
+    #     optimizer=Adam(1e-3),
+    #     metrics=["accuracy", MulticlassKR()],)
     vanilla_model.summary()
 
     print("--create torch model : --")
@@ -125,9 +136,16 @@ def load_MNIST(evaluation=False):
 
 
 if __name__ == "__main__":
-    eval_test = False
+
     
-    pytorch_model = load_MNIST(True)
+    pytorch_model = load_MNIST()
+    torch.save(pytorch_model.state_dict(), '/home/aws_install/robustess_project/lip_models/model_MNIST.pt')
+
+    pytorch_model = load_FMNIST()
+    torch.save(pytorch_model.state_dict(), '/home/aws_install/robustess_project/lip_models/model_FMNIST.pt')
+
+    pytorch_model = load_MNIST08()
+    torch.save(pytorch_model.state_dict(), '/home/aws_install/robustess_project/lip_models/model_MNIST08.pt')
 
     # # vanilla_model_unfolded = unfold_keras_model(vanilla_model)
 

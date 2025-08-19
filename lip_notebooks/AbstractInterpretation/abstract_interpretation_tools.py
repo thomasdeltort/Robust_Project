@@ -2,15 +2,15 @@ import os
 os.environ["KERAS_BACKEND"] = "torch"
 
 import keras
-from deel.lip.layers import (
-    SpectralDense,
-    SpectralConv2D,
-    ScaledL2NormPooling2D,
-    FrobeniusDense,
-)
-from deel.lip.model import Sequential
-from deel.lip.activations import GroupSort
-from deel.lip.losses import MulticlassHKR, MulticlassKR, HKR, HingeMargin
+# from deel.lip.layers import (
+#     SpectralDense,
+#     SpectralConv2D,
+#     ScaledL2NormPooling2D,
+#     FrobeniusDense,
+# )
+# from deel.lip.model import Sequential
+# from deel.lip.activations import GroupSort
+# from deel.lip.losses import MulticlassHKR, MulticlassKR, HKR, HingeMargin
 from keras.layers import Input, Flatten, Dense, Conv2D
 from keras.optimizers import Adam
 from keras.datasets import fashion_mnist
@@ -19,16 +19,10 @@ from deel import torchlip
 import numpy as np
 import keras.ops as K
 import matplotlib.pyplot as plt
-import torchattacks
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-import torchattacks
-from robustbench.utils import clean_accuracy
-import pandas as pd
-import pickle
-
 
 class MaxMin(nn.Module):
     """
@@ -159,6 +153,63 @@ def convert_weights_dynamically_cnn(keras_model, pytorch_model):
                             f"Keras layer is {type(k_layer).__name__} but PyTorch module is {type(pt_module).__name__}.")
 
     print("\n\nDynamic weight conversion finished successfully.")
+    return pytorch_model
+
+def load_MNIST08():
+    print("--create torch model : --")
+    pytorch_model = torchlip.Sequential(
+        nn.Flatten(),
+        torchlip.SpectralLinear(in_features=784, out_features=32),
+        MaxMin(),
+        torchlip.SpectralLinear(in_features=32, out_features=16),
+        MaxMin(),
+        torchlip.SpectralLinear(in_features=16, out_features=1),
+    )
+    # Load the saved weights into the model
+    pytorch_model.load_state_dict(torch.load('/home/aws_install/robustess_project/lip_models/model_MNIST08.pt'))
+
+    return pytorch_model
+
+def load_FMNIST():
+    print("--create torch model : --")
+    pytorch_model = torchlip.Sequential(
+        torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding="same"),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2)),
+        torchlip.SpectralConv2d(in_channels=16, out_channels=32, kernel_size=(3, 3), padding="same"),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2)),
+        FlattenChannelLast(),
+        torchlip.SpectralLinear(1568, 64),
+        MaxMin(),
+        torchlip.SpectralLinear(64,10, bias=False),
+    )
+    # Load the saved weights into the model
+    pytorch_model.load_state_dict(torch.load('/home/aws_install/robustess_project/lip_models/model_FMNIST.pt'))
+
+    return pytorch_model
+
+
+def load_MNIST():
+    print("--create torch model : --")
+    pytorch_model = torchlip.Sequential(
+        torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding=1),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2), stride=2),
+        # torchlip.modules.ScaledL2NormPool2d((2,2)),
+        torchlip.SpectralConv2d(in_channels=16, out_channels=16, kernel_size=(3, 3), padding=1),
+        MaxMin(),
+        ScaledL2NormPool2d((2,2), stride=2),
+        # torchlip.modules.ScaledL2NormPool2d((2,2)),
+        FlattenChannelLast(),
+        torchlip.SpectralLinear(784, 32),
+        MaxMin(),
+        torchlip.SpectralLinear(32,10, bias=False),
+    )
+    pytorch_model = pytorch_model.vanilla_export()
+    # Load the saved weights into the model
+    pytorch_model.load_state_dict(torch.load('/home/aws_install/robustess_project/lip_models/model_MNIST.pt'))
+    pytorch_model.eval()
     return pytorch_model
 
 
@@ -301,6 +352,246 @@ def check_first_conv_weights(keras_model, pytorch_model):
     return kernels_match and biases_match
 
 
+# from torch.nn.modules.utils import _pair
+# from typing import Optional, Union
+# from torch.nn.common_types import _size_2_t
+
+# # --- Helper Module for a LiRPA-compatible export ---
+# # This module encapsulates the LiRPA-compatible operations so that the exported
+# # model does not depend on our custom ScaledL2NormPool2d class definition.
+# class _ExportedL2Pool(nn.Module):
+#     def __init__(self, kernel_size, stride, ceil_mode, coeff):
+#         super().__init__()
+#         self.kernel_size = kernel_size
+#         self.stride = stride
+#         self.ceil_mode = ceil_mode
+#         self.coeff = coeff
+#         self.num_elements = self.kernel_size[0] * self.kernel_size[1]
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         x_squared = torch.pow(x, 2)
+#         avg_of_squares = F.avg_pool2d(
+#             x_squared,
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=self.ceil_mode
+#         )
+#         sum_of_squares = avg_of_squares * self.num_elements
+#         pooled = torch.sqrt(sum_of_squares + 1e-9)
+#         return pooled * self.coeff
+
+#     def __repr__(self):
+#         return (f"_ExportedL2Pool(kernel_size={self.kernel_size}, "
+#                 f"stride={self.stride}, coeff={self.coeff})")
+    
+# def computePoolScalingFactor(kernel_size):
+#     if isinstance(kernel_size, tuple):
+#         scalingFactor = math.sqrt(np.prod(np.asarray(kernel_size)))
+#     else:
+#         scalingFactor = kernel_size
+#     return scalingFactor
+
+# class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
+#     def __init__(
+#         self,
+#         kernel_size: _size_2_t,
+#         stride: Optional[_size_2_t] = None,
+#         ceil_mode: bool = False,
+#         k_coef_lip: float = 1.0,
+#     ):
+#         """
+#         auto_LiRPA-compatible L2-norm pooling layer.
+#         """
+#         # We no longer inherit from LPPool2d, but directly from our custom base class
+#         # and nn.Module (via LipschitzModule).
+#         torch.nn.Module.__init__(self)
+#         torchlip.module.LipschitzModule.__init__(self, k_coef_lip)
+        
+#         self.kernel_size = _pair(kernel_size)
+#         self.stride = _pair(stride) if stride is not None else self.kernel_size
+#         self.ceil_mode = ceil_mode
+
+#         self.scalingFactor = computePoolScalingFactor(self.kernel_size)
+
+#         if self.stride != self.kernel_size:
+#             raise RuntimeError("For provable robustness, stride must be equal to kernel_size for this implementation.")
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         # 1. Square the input tensor element-wise.
+#         # This is a basic operation that auto_LiRPA can handle.
+#         x_squared = torch.pow(x, 2)
+        
+#         # 2. Apply average pooling.
+#         # auto_LiRPA has native support for AvgPool2d.
+#         sum_squared = F.avg_pool2d(
+#             x_squared,
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=self.ceil_mode
+#         )
+        
+#         # 3. Get the number of elements in the pooling window.
+#         num_elements_in_kernel = self.kernel_size[0] * self.kernel_size[1]
+        
+#         # avg_pool(x^2) = (sum(x^2)) / N  =>  sum(x^2) = avg_pool(x^2) * N
+#         sum_squared = sum_squared * num_elements_in_kernel
+        
+#         # 4. Take the element-wise square root.
+#         # torch.sqrt is also a standard supported operation.
+#         # Adding a small epsilon for numerical stability to avoid sqrt(0) gradients issues.
+#         pooled = torch.sqrt(sum_squared + 1e-8)
+        
+#         # 5. Apply the Lipschitz scaling factor.
+#         return pooled * self._coefficient_lip 
+#     # * self.scalingFactor
+        
+#     def __repr__(self):
+#         return (f"ScaledL2NormPool2d(kernel_size={self.kernel_size}, "
+#                 f"stride={self.stride}, k_coef_lip={self._coefficient_lip})")
+    
+#     def vanilla_export(self) -> nn.Module:
+#         """
+#         Exports the layer to a self-contained, auto_LiRPA-compatible nn.Module.
+
+#         This function returns a new module that encapsulates the exact same
+#         LiRPA-compatible operations as this layer's forward pass. This is
+#         somewhat redundant, as this layer itself is already compatible.
+#         The primary use for this would be to create a model with no custom
+#         class definitions before saving or deployment.
+
+#         IMPORTANT: For LiRPA analysis, you can use the main ScaledL2NormPool2d
+#         layer directly. You do not need to call this export function first.
+#         """
+#         # This returns a new, standard nn.Module that is also LiRPA-compatible.
+#         return _ExportedL2Pool(
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=self.ceil_mode,
+#             coeff=self._coefficient_lip
+#         )
+
+# class _ExportedAdaptiveL2Pool(nn.Module):
+#     def __init__(self, output_size, coeff):
+#         super().__init__()
+#         self.output_size = output_size
+#         self.coeff = coeff
+#         self.adaptive_avg_pool = nn.AdaptiveAvgPool2d(output_size)
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         # Get spatial dimensions to calculate total number of elements
+#         h, w = x.shape[-2:]
+#         num_elements = h * w
+
+#         # LiRPA-compatible L2 norm calculation
+#         x_squared = torch.pow(x, 2)
+#         # adaptive_avg_pool computes sum(x^2) / num_elements
+#         avg_of_squares = self.adaptive_avg_pool(x_squared)
+#         sum_of_squares = avg_of_squares * num_elements
+#         pooled = torch.sqrt(sum_of_squares + 1e-9)
+        
+#         return pooled * self.coeff
+
+#     def __repr__(self):
+#         return (f"_ExportedAdaptiveL2Pool(output_size={self.output_size}, "
+#                 f"coeff={self.coeff})")
+    
+# class ScaledAdaptiveL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
+#     def __init__(
+#         self,
+#         output_size: _size_2_t = (1, 1),
+#         k_coef_lip: float = 1.0,
+#     ):
+#         """
+#         auto_LiRPA-compatible Adaptive L2-norm pooling layer.
+
+#         This layer's forward pass is implemented using only operations natively
+#         supported by auto_LiRPA (pow, adaptive_avg_pool2d, sqrt, mul).
+#         """
+#         torch.nn.Module.__init__(self)
+#         torchlip.module.LipschitzModule.__init__(self, k_coef_lip)
+        
+#         # Ensure output_size is a tuple of two integers
+#         if not isinstance(output_size, tuple) or len(output_size) != 2:
+#              output_size = _pair(output_size)
+
+#         # For this operation to be a valid norm, it must collapse the spatial dimensions
+#         if output_size[0] != 1 or output_size[1] != 1:
+#             raise ValueError("output_size must be (1, 1) for ScaledAdaptiveL2NormPool2d")
+        
+#         self.output_size = output_size
+#         # We use the standard AdaptiveAvgPool2d as a supported building block
+#         self.adaptive_avg_pool = nn.AdaptiveAvgPool2d(self.output_size)
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         """
+#         Performs adaptive L2 pooling using a sequence of LiRPA-compatible operations.
+#         """
+#         # 1. Get spatial dimensions to calculate total number of elements.
+#         h, w = x.shape[-2:]
+#         num_elements = h * w
+
+#         # 2. Square the input tensor.
+#         x_squared = torch.pow(x, 2)
+        
+#         # 3. Apply adaptive average pooling to the squared tensor.
+#         # This computes (sum of squares) / num_elements
+#         avg_of_squares = self.adaptive_avg_pool(x_squared)
+        
+#         # 4. Multiply by num_elements to get the sum of squares.
+#         sum_of_squares = avg_of_squares * num_elements
+        
+#         # 5. Take the square root to get the L2 norm over the spatial dimensions.
+#         # Add a small epsilon for numerical stability.
+#         pooled = torch.sqrt(sum_of_squares + 1e-9)
+        
+#         # 6. Apply the Lipschitz scaling factor.
+#         return pooled * self._coefficient_lip
+        
+#     def __repr__(self):
+#         return (f"ScaledAdaptiveL2NormPool2d(output_size={self.output_size}, "
+#                 f"k_coef_lip={self._coefficient_lip})")
+
+#     def vanilla_export(self) -> nn.Module:
+#         """
+#         Exports the layer to a self-contained, auto_LiRPA-compatible nn.Module.
+#         """
+#         return _ExportedAdaptiveL2Pool(
+#             output_size=self.output_size,
+#             coeff=self._coefficient_lip
+        # )
+class _ExportedAdaptiveL2Pool(nn.Module):
+    def __init__(self, output_size, coeff):
+        super().__init__()
+        self.output_size = output_size
+        self.coeff = coeff
+        self.adaptive_avg_pool = nn.AdaptiveAvgPool2d(output_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Get spatial dimensions to calculate total number of elements
+        h, w = x.shape[-2:]
+        num_elements = h * w
+
+        # LiRPA-compatible L2 norm calculation
+        x_squared = torch.pow(x, 2)
+        # adaptive_avg_pool computes sum(x^2) / num_elements
+        avg_of_squares = self.adaptive_avg_pool(x_squared)
+        # Convert the dynamic scalar `num_elements` to a 4D tensor.
+        num_elements_4d = torch.tensor(
+            num_elements, device=x.device, dtype=x.dtype
+        ).view(1, 1, 1, 1)
+        sum_of_squares = avg_of_squares * num_elements_4d
+        pooled = torch.sqrt(sum_of_squares + 1e-9)
+        # Convert the scalar `coeff` to a 4D tensor.
+        coeff_4d = torch.tensor(
+            self.coeff, device=x.device, dtype=x.dtype
+        ).view(1, 1, 1, 1)
+
+        return pooled * coeff_4d
+
+    def __repr__(self):
+        return (f"_ExportedAdaptiveL2Pool(output_size={self.output_size}, "
+                f"coeff={self.coeff})")
+    
 from torch.nn.modules.utils import _pair
 from typing import Optional, Union
 from torch.nn.common_types import _size_2_t
@@ -325,9 +616,19 @@ class _ExportedL2Pool(nn.Module):
             stride=self.stride,
             ceil_mode=self.ceil_mode
         )
-        sum_of_squares = avg_of_squares * self.num_elements
+        # --- FIX #1 ---
+        # Convert the scalar `num_elements` to a 4D tensor before multiplying.
+        num_elements_4d = torch.tensor(
+            self.num_elements, device=x.device, dtype=x.dtype
+        ).view(1, 1, 1, 1)
+        sum_of_squares = avg_of_squares * num_elements_4d
         pooled = torch.sqrt(sum_of_squares + 1e-9)
-        return pooled * self.coeff
+        # --- FIX #2 ---
+        # Convert the scalar `coeff` to a 4D tensor before multiplying.
+        coeff_4d = torch.tensor(
+            self.coeff, device=x.device, dtype=x.dtype
+        ).view(1, 1, 1, 1)
+        return pooled * coeff_4d
 
     def __repr__(self):
         return (f"_ExportedL2Pool(kernel_size={self.kernel_size}, "
@@ -397,6 +698,7 @@ class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
     def __repr__(self):
         return (f"ScaledL2NormPool2d(kernel_size={self.kernel_size}, "
                 f"stride={self.stride}, k_coef_lip={self._coefficient_lip})")
+
     
     def vanilla_export(self) -> nn.Module:
         """
@@ -419,30 +721,6 @@ class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
             coeff=self._coefficient_lip
         )
 
-class _ExportedAdaptiveL2Pool(nn.Module):
-    def __init__(self, output_size, coeff):
-        super().__init__()
-        self.output_size = output_size
-        self.coeff = coeff
-        self.adaptive_avg_pool = nn.AdaptiveAvgPool2d(output_size)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # Get spatial dimensions to calculate total number of elements
-        h, w = x.shape[-2:]
-        num_elements = h * w
-
-        # LiRPA-compatible L2 norm calculation
-        x_squared = torch.pow(x, 2)
-        # adaptive_avg_pool computes sum(x^2) / num_elements
-        avg_of_squares = self.adaptive_avg_pool(x_squared)
-        sum_of_squares = avg_of_squares * num_elements
-        pooled = torch.sqrt(sum_of_squares + 1e-9)
-        
-        return pooled * self.coeff
-
-    def __repr__(self):
-        return (f"_ExportedAdaptiveL2Pool(output_size={self.output_size}, "
-                f"coeff={self.coeff})")
     
 class ScaledAdaptiveL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
     def __init__(
@@ -507,7 +785,54 @@ class ScaledAdaptiveL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModul
         return _ExportedAdaptiveL2Pool(
             output_size=self.output_size,
             coeff=self._coefficient_lip
-        )
+        )    
+
+class FlattenChannelLast(nn.Module):
+    """
+    A custom PyTorch module that flattens a tensor by interleaving the channels,
+    mimicking the behavior of Keras' `Flatten(data_format="channels_last")` on a
+    `channels_first` input tensor.
+
+    It assumes the input tensor is in `channels_first` format (N, C, H, W).
+    It works by first permuting the dimensions to `(N, H, W, C)` and then
+    flattening the last three dimensions.
+
+    Input Shape: (N, C, H, W)
+    Output Shape: (N, C * H * W)
+    """
+    def __init__(self):
+        """
+        Initializes the FlattenChannelLast module.
+        """
+        super().__init__()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Defines the forward pass for the layer.
+
+        Args:
+            x: The input tensor with shape (N, C, H, W).
+
+        Returns:
+            The flattened tensor with shape (N, C * H * W).
+        """
+        # Ensure the input is 4D, which is the expected format
+        if x.dim() != 4:
+            raise ValueError(f"Expected 4D input (got {x.dim()}D input)")
+
+        # Get the batch size to handle variable batch sizes correctly
+        batch_size = x.shape[0]
+
+        # The core logic:
+        # 1. Permute dimensions from (N, C, H, W) -> (N, H, W, C)
+        #    The indices are (0, 2, 3, 1)
+        x_permuted = x.permute(0, 2, 3, 1)
+
+        # 2. Flatten the permuted tensor. `reshape` is generally preferred.
+        #    The `-1` tells PyTorch to calculate the correct size for that dimension.
+        #    This results in a tensor of shape (N, H * W * C).
+        return x_permuted.reshape(batch_size, -1)
+    
     
 def debug_and_compare_submodels(vanilla_model, pytorch_model, test_tensor):
     """
@@ -647,52 +972,7 @@ def unfold_keras_model(model_to_unfold):
 # https://github.com/keras-team/keras/blob/v3.11.1/keras/src/layers/reshaping/flatten.py#L11  Lines 42-46
 
 
-class FlattenChannelLast(nn.Module):
-    """
-    A custom PyTorch module that flattens a tensor by interleaving the channels,
-    mimicking the behavior of Keras' `Flatten(data_format="channels_last")` on a
-    `channels_first` input tensor.
 
-    It assumes the input tensor is in `channels_first` format (N, C, H, W).
-    It works by first permuting the dimensions to `(N, H, W, C)` and then
-    flattening the last three dimensions.
-
-    Input Shape: (N, C, H, W)
-    Output Shape: (N, C * H * W)
-    """
-    def __init__(self):
-        """
-        Initializes the FlattenChannelLast module.
-        """
-        super().__init__()
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Defines the forward pass for the layer.
-
-        Args:
-            x: The input tensor with shape (N, C, H, W).
-
-        Returns:
-            The flattened tensor with shape (N, C * H * W).
-        """
-        # Ensure the input is 4D, which is the expected format
-        if x.dim() != 4:
-            raise ValueError(f"Expected 4D input (got {x.dim()}D input)")
-
-        # Get the batch size to handle variable batch sizes correctly
-        batch_size = x.shape[0]
-
-        # The core logic:
-        # 1. Permute dimensions from (N, C, H, W) -> (N, H, W, C)
-        #    The indices are (0, 2, 3, 1)
-        x_permuted = x.permute(0, 2, 3, 1)
-
-        # 2. Flatten the permuted tensor. `reshape` is generally preferred.
-        #    The `-1` tells PyTorch to calculate the correct size for that dimension.
-        #    This results in a tensor of shape (N, H * W * C).
-        return x_permuted.reshape(batch_size, -1)
-    
 
 def test_flatten():
     x = keras.random.normal((16,7,7))[None]
