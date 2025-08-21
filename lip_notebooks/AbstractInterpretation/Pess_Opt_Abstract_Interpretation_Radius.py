@@ -61,18 +61,75 @@ if __name__ == "__main__":
     images = images.to(device)
     labels = labels.to(device)
 
+    print(pytorch_model(images[:1]))
+    idx = 100
+
+    print(images[idx:idx+1].shape)
     print("launching AutoLirpa")
     bounded_model = BoundedModule(pytorch_model, torch.ones_like(images[100:101]).to(device))
     bounded_model.eval()
 
-    eps = 0.01
+    eps = 0.1
     norm = 2
     ptb = PerturbationLpNorm(norm = norm, eps = eps)
     # Input tensor is wrapped in a BoundedTensor object.
     bounded_image = BoundedTensor(images[100:101], ptb).to(device)
     print('Bounding method: backward (CROWN, DeepPoly)')
-    with torch.no_grad():  # If gradients of the bounds are not needed, we can use no_grad to save memory.
-        lb, ub = bounded_model.compute_bounds(x=(bounded_image,), method='CROWN-IBP')
-    print(lb, ub)
 
-    # print(torch.argmax(pytorch_model(images)), labels)
+    # 2. Get the model's prediction on the clean image
+    clean_logits = pytorch_model(images)
+    pred_labels = torch.argmax(clean_logits, dim=1)
+
+    # The same logic applies to batches
+    
+    true_label = labels[idx]
+    num_classes = clean_logits.shape[1]
+
+    # 3. Construct the specification matrix C for the logit differences
+    # We want to compute the bounds for f_{true_label} - f_j for all j != true_label.
+
+    # Create a list to hold the rows of the C matrix
+    c_rows = []
+    for j in range(num_classes):
+        if j == true_label:
+            continue  # Skip the f_true - f_true case
+        
+        # Create a row vector for f_true - f_j
+        row = torch.zeros(1, num_classes)
+        row[0, true_label] = 1.0
+        row[0, j] = -1.0
+        c_rows.append(row)
+
+    # Stack the rows to form the final C matrix
+    # The shape will be (num_classes - 1, num_classes)
+    c_matrix = torch.cat(c_rows, dim=0)
+
+    # Make sure the C matrix is on the correct device
+    c_matrix = c_matrix.to(images.device)
+
+    # 4. Compute the bounds using the C matrix
+    # The output of compute_bounds will be the bounds on C * L, which are our logit differences.
+    logit_diff_lb, logit_diff_ub = bounded_model.compute_bounds(
+        x=(bounded_image,), 
+        C=c_matrix.unsqueeze(0),
+        method='CROWN'
+    )
+
+
+    print(logit_diff_lb, logit_diff_ub)
+
+    # 5. Interpret the results
+    # logit_diff_lb is a tensor of shape (batch_size, num_classes - 1)
+    # It contains the lower bounds for [f_true - f_0, f_true - f_1, ..., f_true - f_{k-1}] (excluding f_true - f_true)
+
+    print(f"Lower bounds on logit differences (f_{true_label} - f_j):")
+    print(logit_diff_lb)
+
+    # To certify robustness, we check if all these lower bounds are positive
+    is_robust = torch.all(logit_diff_lb > 0)
+
+    if is_robust:
+        print(f"\nImage {idx} is CERTIFIED ROBUST for epsilon = {eps}")
+        print(f"The minimum logit difference is {torch.min(logit_diff_lb).item()}")
+    else:
+        print(f"\nImage {idx} is NOT certified robust for epsilon = {eps}")

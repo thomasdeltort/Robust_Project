@@ -50,7 +50,85 @@ class MaxMin(nn.Module):
 
         # Reshape back to the original input shape
         return sorted_pairs.view(x.shape)
-    
+
+class ReLU_GroupSort2(nn.Module):
+    """
+    A PyTorch module that sorts pairs of features (groups of 2) along the last
+    dimension. This implementation is a reformulation of the GroupSort2 activation
+    function using only dense (Linear) layers and ReLU activations, making it
+    compatible with network verification tools like autolirpa.
+
+    The input tensor's total number of features (product of dimensions after
+    the batch dimension) must be even.
+    """
+    def __init__(self):
+        super(ReLU_GroupSort2, self).__init__()
+        
+        # Layer 1: Computes x2 - x1 for a pair [x1, x2]
+        # Keras kernel shape: (in_features, out_features) = (2, 1) -> [[-1.0], [1.0]]
+        # PyTorch weight shape: (out_features, in_features) = (1, 2)
+        self.layer1 = nn.Linear(2, 1, bias=False)
+        w1 = torch.tensor([[-1.0, 1.0]], dtype=torch.float32)
+        self.layer1.weight = nn.Parameter(w1, requires_grad=False)
+
+        self.relu = nn.ReLU()
+
+        # Layer 3: Takes relu(x2-x1) and produces [-relu(x2-x1), relu(x2-x1)]
+        # Keras kernel shape: (in_features, out_features) = (1, 2) -> [[-1.0, 1.0]]
+        # PyTorch weight shape: (out_features, in_features) = (2, 1)
+        self.layer3 = nn.Linear(1, 2, bias=False)
+        w3 = torch.tensor([[-1.0], [1.0]], dtype=torch.float32)
+        self.layer3.weight = nn.Parameter(w3, requires_grad=False)
+
+        # Layer 4: Permutes an input pair [x1, x2] to [x2, x1]
+        # Keras kernel shape: (in_features, out_features) = (2, 2) -> [[0,1],[1,0]]
+        # PyTorch weight shape: (out_features, in_features) = (2, 2)
+        # The permutation matrix is symmetric, so it's the same.
+        self.layer4 = nn.Linear(2, 2, bias=False)
+        w4 = torch.tensor([[0.0, 1.0], [1.0, 0.0]], dtype=torch.float32)
+        self.layer4.weight = nn.Parameter(w4, requires_grad=False)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Store original shape to reshape at the end
+        original_shape = x.shape
+        batch_size = original_shape[0]
+        
+        # Check if the total number of features is even
+        num_features = np.prod(original_shape[1:])
+        if num_features % 2 != 0:
+            raise ValueError(f"The total number of features must be even, but got {num_features}.")
+
+        # Reshape the input into groups of 2. Shape: (batch_size, n_dim, 2)
+        # where n_dim is the total number of pairs.
+        # reshaped_x = x.view(original_shape[0], -1, 2)
+        reshaped_x = x.reshape(batch_size, -1, 2)
+
+        # Step 1: Compute x2 - x1
+        # output_1 shape: (batch_size, n_dim, 1)
+        output_1 = self.layer1(reshaped_x)
+
+        # Step 2: Apply ReLU -> relu(x2 - x1)
+        # output_2 shape: (batch_size, n_dim, 1)
+        output_2 = self.relu(output_1)
+
+        # Step 3: Create [-relu(x2-x1), relu(x2-x1)]
+        # output_3 shape: (batch_size, n_dim, 2)
+        output_3 = self.layer3(output_2)
+
+        # Step 4: Permute the original input pair to [x2, x1]
+        # output_4 shape: (batch_size, n_dim, 2)
+        output_4 = self.layer4(reshaped_x)
+
+        # Step 5: Add the two results to get the sorted pair
+        # [-relu(x2-x1)+x2, relu(x2-x1)+x1] = [min(x1, x2), max(x1, x2)]
+        sorted_pairs = output_3 + output_4
+
+        # Step 6: Reshape the sorted pairs back to the original input shape
+        output = sorted_pairs.view(original_shape)
+
+        return output
+
+
 def convert_weights_dynamically_dense(keras_model, pytorch_model):
     """
     Copies weights by looping through corresponding layers.
@@ -165,18 +243,19 @@ def load_MNIST08():
         MaxMin(),
         torchlip.SpectralLinear(in_features=16, out_features=1),
     )
+    pytorch_model = pytorch_model.vanilla_export()
     # Load the saved weights into the model
     pytorch_model.load_state_dict(torch.load('/home/aws_install/robustess_project/lip_models/model_MNIST08.pt'))
-
+    pytorch_model.eval()
     return pytorch_model
 
 def load_FMNIST():
     print("--create torch model : --")
     pytorch_model = torchlip.Sequential(
-        torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding="same"),
+        torchlip.SpectralConv2d(in_channels=1, out_channels=16, kernel_size=(3, 3), padding=1),
         MaxMin(),
         ScaledL2NormPool2d((2,2)),
-        torchlip.SpectralConv2d(in_channels=16, out_channels=32, kernel_size=(3, 3), padding="same"),
+        torchlip.SpectralConv2d(in_channels=16, out_channels=32, kernel_size=(3, 3), padding=1),
         MaxMin(),
         ScaledL2NormPool2d((2,2)),
         FlattenChannelLast(),
@@ -184,9 +263,10 @@ def load_FMNIST():
         MaxMin(),
         torchlip.SpectralLinear(64,10, bias=False),
     )
+    pytorch_model = pytorch_model.vanilla_export()
     # Load the saved weights into the model
     pytorch_model.load_state_dict(torch.load('/home/aws_install/robustess_project/lip_models/model_FMNIST.pt'))
-
+    pytorch_model.eval()
     return pytorch_model
 
 
