@@ -156,7 +156,7 @@ if __name__ == "__main__":
         print(f"Processing point {i+1}/{total_points}...")
 
         # Your calculation function remains the same
-        eps_working = single_compute_relaxation_radius_multiclass(i, images, labels, vanilla_model, nb_pts, bounds='constant', input_shape=(1,28,28))
+        eps_working = single_compute_relaxation_radius_multiclass(i, images, labels, vanilla_model, nb_pts, input_shape=(1,28,28))
         
         # Store result for the pickle file
         list_for_pickle.append(eps_working)

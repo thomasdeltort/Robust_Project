@@ -127,6 +127,121 @@ class ReLU_GroupSort2(nn.Module):
         output = sorted_pairs.view(original_shape)
 
         return output
+    
+
+class ReLU_GroupSort2_2D(nn.Module):
+    """
+    A PyTorch module that sorts pairs of features.
+
+    This implementation is specifically designed to be compatible with verification 
+    tools like auto_lirpa by ensuring that the internal ReLU activation is
+    applied to a standard 2D tensor. It expects a 2D input of shape 
+    (batch_size, num_features).
+    """
+    def __init__(self):
+        super(ReLU_GroupSort2_2D, self).__init__()
+        # On n'a plus besoin de couches Linear internes, seulement le ReLU
+        self.relu = nn.ReLU()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Étape 1: Vérifier que l'entrée est bien 2D
+        if len(x.shape) != 2:
+            raise ValueError(f"Expected a 2D input (batch_size, features), but got shape {x.shape}.")
+        
+        batch_size, num_features = x.shape
+        
+        if num_features % 2 != 0:
+            raise ValueError(f"The number of features must be even, but got {num_features}.")
+
+        # Étape 2: Reshape l'input en paires
+        # Forme : (batch_size, num_pairs, 2)
+        reshaped_x = x.view(batch_size, -1, 2)
+
+        # Étape 3: Séparer x1 et x2 en utilisant le slicing
+        # x1s et x2s auront la forme (batch_size, num_pairs)
+        x1s = reshaped_x[..., 0]
+        x2s = reshaped_x[..., 1]
+
+        # Étape 4: Calculer la différence. Le tenseur 'diff' est 2D.
+        # Forme : (batch_size, num_pairs)
+        diff = x2s - x1s
+
+        # Étape 5: Appliquer ReLU sur le tenseur 2D.
+        # C'est l'étape cruciale qui résout le problème avec auto_lirpa.
+        relu_diff = self.relu(diff)
+
+        # Étape 6: Reconstruire le min et le max en se basant sur la formule
+        # min(x1, x2) = x2 - relu(x2 - x1)
+        # max(x1, x2) = x1 + relu(x2 - x1)
+        y1 = x2s - relu_diff  # C'est le min de chaque paire
+        y2 = x1s + relu_diff  # C'est le max de chaque paire
+
+        # Étape 7: Recombiner les paires triées
+        # On empile le long d'une nouvelle dernière dimension
+        # Forme : (batch_size, num_pairs, 2)
+        sorted_pairs = torch.stack((y1, y2), dim=2)
+
+        # Étape 8: Reshape pour revenir à la forme 2D d'origine
+        # Forme : (batch_size, num_features)
+        output = sorted_pairs.view(batch_size, num_features)
+
+        return output
+    
+class GroupSort_General(nn.Module):
+    """
+    A universal, auto_lirpa-compatible PyTorch module that sorts pairs of features.
+
+    This module can handle inputs of any shape (e.g., 2D, 4D). It works by 
+    temporarily flattening the feature dimensions, applying the sort logic in a 
+    verifier-friendly way (with ReLU on a 2D tensor), and then reshaping the 
+    output back to the original input shape.
+
+    The total number of features (product of dimensions after the batch dim) must be even.
+    """
+    def __init__(self):
+        super(GroupSort_General, self).__init__()
+        self.relu = nn.ReLU()
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        original_shape = x.shape
+        batch_size = original_shape[0]
+        
+        num_features = np.prod(original_shape[1:])
+        
+        if num_features % 2 != 0:
+            raise ValueError(
+                f"The total number of features must be even, but got {num_features} "
+                f"for shape {original_shape}."
+            )
+
+        # Utiliser .reshape() pour gérer les tenseurs non-contigus
+        x_flat = x.reshape(batch_size, -1)
+
+        # --- Logique de tri ---
+        
+        # .reshape() est aussi plus sûr ici, par précaution
+        reshaped_x = x_flat.reshape(batch_size, -1, 2)
+        
+        x1s = reshaped_x[..., 0]
+        x2s = reshaped_x[..., 1]
+        
+        diff = x2s - x1s
+        relu_diff = self.relu(diff)
+        
+        y1 = x2s - relu_diff
+        y2 = x1s + relu_diff
+        
+        sorted_pairs = torch.stack((y1, y2), dim=2)
+        
+        # .reshape() est aussi plus sûr ici
+        sorted_flat = sorted_pairs.reshape(batch_size, -1)
+
+        # --- Fin de la logique ---
+
+        # Restaurer la forme originale en utilisant .reshape()
+        output = sorted_flat.reshape(original_shape)
+        
+        return output
 
 
 def convert_weights_dynamically_dense(keras_model, pytorch_model):
@@ -696,19 +811,39 @@ class _ExportedL2Pool(nn.Module):
             stride=self.stride,
             ceil_mode=self.ceil_mode
         )
-        # --- FIX #1 ---
-        # Convert the scalar `num_elements` to a 4D tensor before multiplying.
-        num_elements_4d = torch.tensor(
-            self.num_elements, device=x.device, dtype=x.dtype
-        ).view(1, 1, 1, 1)
-        sum_of_squares = avg_of_squares * num_elements_4d
-        pooled = torch.sqrt(sum_of_squares + 1e-9)
-        # --- FIX #2 ---
-        # Convert the scalar `coeff` to a 4D tensor before multiplying.
-        coeff_4d = torch.tensor(
-            self.coeff, device=x.device, dtype=x.dtype
-        ).view(1, 1, 1, 1)
-        return pooled * coeff_4d
+        # # --- FIX #1 ---
+        # # Convert the scalar `num_elements` to a 4D tensor before multiplying.
+        # num_elements_4d = torch.tensor(
+        #     self.num_elements, device=x.device, dtype=x.dtype
+        # ).view(1, 1, 1, 1)
+        # sum_of_squares = avg_of_squares * num_elements_4d
+        # pooled = torch.sqrt(sum_of_squares + 1e-9)
+        # # --- FIX #2 ---
+        # # Convert the scalar `coeff` to a 4D tensor before multiplying.
+        # coeff_4d = torch.tensor(
+        #     self.coeff, device=x.device, dtype=x.dtype
+        # ).view(1, 1, 1, 1)
+        # return pooled * coeff_4d
+    
+
+        # --- THE MODIF: Force conversion from "patches" to "dense" representation ---
+        # 1. Store the original 4D shape.
+        original_shape = avg_of_squares.shape
+        # 2. Flatten the tensor. This forces auto_LiRPA to convert its internal
+        #    bound representation from Patches to a simple Linear matrix.
+        flattened_avg = torch.flatten(avg_of_squares, 1)
+
+        # --- Perform multiplications on the "safe" dense representation ---
+        # Now that the representation is dense, multiplying by a scalar is safe.
+        flattened_sum_of_squares = flattened_avg * self.num_elements
+        flattened_pooled = torch.sqrt(torch.max(flattened_sum_of_squares, torch.tensor(1e-9, device=flattened_sum_of_squares.device, dtype=flattened_sum_of_squares.dtype)))
+        # FIX removed "+ 1e-9" from sqrt
+        flattened_scaled_pooled = flattened_pooled * self.coeff
+
+        # --- Reshape back to the original 4D shape ---
+        # The un-flatten operation is also understood by auto_LiRPA.
+        output = flattened_scaled_pooled.view(original_shape)
+        return output
 
     def __repr__(self):
         return (f"_ExportedL2Pool(kernel_size={self.kernel_size}, "
