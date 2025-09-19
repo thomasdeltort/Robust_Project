@@ -62,15 +62,28 @@ if __name__ == "__main__":
         metrics=["accuracy", MulticlassKR()],)
     print("Generating Sample :")
     # Generate the test sample for radius evaluation
-    images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model_bis)
-   
+    # images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model_bis)
+    output_dir = "./benchmark_dataset_MNIST08"
+    images_path = os.path.join(output_dir, "images.pkl")
+    targets_path = os.path.join(output_dir, "targets.pkl")
+
+    # --- Load the Tensors ---
+    print(f"Loading data from {output_dir}...")
+
+    # Load the images tensor
+    with open(images_path, 'rb') as f:
+        images = pickle.load(f)
+
+    # Load the targets tensor
+    with open(targets_path, 'rb') as f:
+        labels = pickle.load(f)
     total_points = images.shape[0]
 
     # Initialize the CSV file with column headers
-    input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.csv"
-    input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.pkl"
-    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.csv"
-    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon.pkl"
+    input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output2.csv"
+    input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output2.pkl"
+    output_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon2.csv"
+    output_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_Decomon_MNIST08_single_output_Decomon2.pkl"
 
     # input_csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first.csv"
     # input_pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST_10first.pkl"

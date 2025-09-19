@@ -68,8 +68,22 @@ if __name__ == "__main__":
         metrics=["accuracy", MulticlassKR()],)
     print("Generating Sample :")
     # Generate the test sample for radius evaluation
-    images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model)
-   
+    # images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model)
+    # Define the directory and file paths
+    output_dir = "./benchmark_dataset_MNIST08"
+    images_path = os.path.join(output_dir, "images.pkl")
+    targets_path = os.path.join(output_dir, "targets.pkl")
+
+    # --- Load the Tensors ---
+    print(f"Loading data from {output_dir}...")
+
+    # Load the images tensor
+    with open(images_path, 'rb') as f:
+        images = pickle.load(f)
+
+    # Load the targets tensor
+    with open(targets_path, 'rb') as f:
+        labels = pickle.load(f)
     # total_points = images.shape[0]
     total_points = images.shape[0]
 
@@ -103,12 +117,14 @@ if __name__ == "__main__":
             "Adv_Epsilon_PGD": eps_pgd[0].detach().cpu().numpy()
         }
         
-        # Append to CSV file without rewriting the header
-        pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
+        # # Append to CSV file without rewriting the header
+        # pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
         
-        # Append to the list for Pickle
-        df_list.append(row)
+        # # Append to the list for Pickle
+        # df_list.append(row)
         
-        # Save to Pickle at each iteration
-        pd.DataFrame(df_list).to_pickle(pkl_path)
+        # # Save to Pickle at each iteration
+        # pd.DataFrame(df_list).to_pickle(pkl_path)
+        print(i, eps_aa, eps_pgd)
+        print(lip_radius)
 

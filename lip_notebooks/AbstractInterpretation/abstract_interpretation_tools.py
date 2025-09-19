@@ -200,7 +200,7 @@ class GroupSort_General(nn.Module):
     """
     def __init__(self):
         super(GroupSort_General, self).__init__()
-        self.relu = nn.ReLU()
+        # self.relu = nn.ReLU()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         original_shape = x.shape
@@ -226,7 +226,7 @@ class GroupSort_General(nn.Module):
         x2s = reshaped_x[..., 1]
         
         diff = x2s - x1s
-        relu_diff = self.relu(diff)
+        relu_diff = nn.ReLU()(diff)
         
         y1 = x2s - relu_diff
         y2 = x1s + relu_diff

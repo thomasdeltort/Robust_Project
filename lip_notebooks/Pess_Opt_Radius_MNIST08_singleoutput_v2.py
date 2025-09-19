@@ -72,8 +72,21 @@ if __name__ == "__main__":
         metrics=["accuracy", MulticlassKR()],)
     print("Generating Sample :")
     # Generate the test sample for radius evaluation
-    images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model_bis)
-   
+    # images, labels, idx_list = select_data_for_radius_evaluation_MNIST08(x_test, y_test_ord, vanilla_model_bis)
+    output_dir = "./benchmark_dataset_MNIST08"
+    images_path = os.path.join(output_dir, "images.pkl")
+    targets_path = os.path.join(output_dir, "targets.pkl")
+
+    # --- Load the Tensors ---
+    print(f"Loading data from {output_dir}...")
+
+    # Load the images tensor
+    with open(images_path, 'rb') as f:
+        images = pickle.load(f)
+
+    # Load the targets tensor
+    with open(targets_path, 'rb') as f:
+        labels = pickle.load(f)
     # total_points = images.shape[0]
     total_points = images.shape[0]
 
@@ -81,11 +94,13 @@ if __name__ == "__main__":
     print("Generating Certificates :")
     lip_radius = compute_binary_certificate(images, vanilla_model)
     
-
+    # vanilla_model.evaluate(images, labels)
+    # import pdb;pdb.set_trace()
     # Initialize the CSV file with column headers
     columns = ["Index", "Label_GT", "Predicted_Label", "Lipschitz_Constant", "Robust_Epsilon", "Adv_Epsilon_AA", "Adv_Epsilon_PGD"]
-    csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.csv"
-    pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output.pkl"
+    
+    csv_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output2.csv"
+    pkl_path = "/home/aws_install/robustess_project/lip_notebooks/data/Radius_Data/Radius_MNIST08_single_output2.pkl"
 
     # Create an empty file with headers
     pd.DataFrame(columns=columns).to_csv(csv_path, index=False)
@@ -93,6 +108,7 @@ if __name__ == "__main__":
     df_list = []  # Temporary list for storage before Pickle
 
     for i in range(total_points):
+    # for i in [140,144]:
         eps_pgd = single_compute_optimistic_radius_PGD(i, images, labels, lip_radius, vanilla_model_bis, n_iter=10)
         eps_aa = single_compute_optimistic_radius_AA_binary(i,images, labels, lip_radius, vanilla_model_bis, n_iter=10)
         print("Point ", i, "attaques trouvées :", eps_pgd, eps_aa)
@@ -110,9 +126,12 @@ if __name__ == "__main__":
         # Append to CSV file without rewriting the header
         pd.DataFrame([row]).to_csv(csv_path, mode='a', header=False, index=False)
         
-        # Append to the list for Pickle
+        # # Append to the list for Pickle
         df_list.append(row)
         
-        # Save to Pickle at each iteration
+        # # Save to Pickle at each iteration
         pd.DataFrame(df_list).to_pickle(pkl_path)
+        print(i, eps_aa, eps_pgd)
+        print(lip_radius)
+
 

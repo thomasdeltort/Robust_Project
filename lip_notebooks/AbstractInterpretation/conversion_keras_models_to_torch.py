@@ -63,6 +63,38 @@ def load_MNIST08():
 
     return pytorch_model
 
+def load_MNIST08_2logits():
+    print("--loading model : --")
+    vanilla_model = keras.models.load_model("/home/aws_install/robustess_project/lip_models/demo3_FC_vanilla_MNIST08_channelfirst_False_disj_Neurons_single_output.keras")
+    vanilla_model.compile(
+    
+        loss=HKR(
+            alpha=10.0, min_margin=1.0
+        ),  # HKR stands for the hinge regularized KR loss
+        metrics=[
+            # KR,  # shows the KR term of the loss
+            HingeMargin(min_margin=1.0),  # shows the hinge term of the loss
+        ],
+        optimizer=Adam(learning_rate=0.001),)
+    vanilla_model.summary()
+
+    print("--create torch model : --")
+    pytorch_model = torchlip.Sequential(
+        nn.Flatten(),
+        torchlip.SpectralLinear(in_features=784, out_features=32),
+        MaxMin(),
+        torchlip.SpectralLinear(in_features=32, out_features=16),
+        MaxMin(),
+        torchlip.SpectralLinear(in_features=16, out_features=2),
+    )
+
+    pytorch_model = pytorch_model.vanilla_export()
+    pytorch_model.eval()
+
+    pytorch_model = convert_weights_dynamically_dense(vanilla_model, pytorch_model)
+
+    return pytorch_model
+
 def load_FMNIST():
     print("--loading model : --")
     vanilla_model = keras.models.load_model("/home/aws_install/robustess_project/lip_models/demo4_vanilla_fashionMNIST_channelfirst_False_disj_Neurons.keras")
