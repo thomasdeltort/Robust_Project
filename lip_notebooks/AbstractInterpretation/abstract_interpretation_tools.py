@@ -50,142 +50,6 @@ class MaxMin(nn.Module):
 
         # Reshape back to the original input shape
         return sorted_pairs.view(x.shape)
-
-class ReLU_GroupSort2(nn.Module):
-    """
-    A PyTorch module that sorts pairs of features (groups of 2) along the last
-    dimension. This implementation is a reformulation of the GroupSort2 activation
-    function using only dense (Linear) layers and ReLU activations, making it
-    compatible with network verification tools like autolirpa.
-
-    The input tensor's total number of features (product of dimensions after
-    the batch dimension) must be even.
-    """
-    def __init__(self):
-        super(ReLU_GroupSort2, self).__init__()
-        
-        # Layer 1: Computes x2 - x1 for a pair [x1, x2]
-        # Keras kernel shape: (in_features, out_features) = (2, 1) -> [[-1.0], [1.0]]
-        # PyTorch weight shape: (out_features, in_features) = (1, 2)
-        self.layer1 = nn.Linear(2, 1, bias=False)
-        w1 = torch.tensor([[-1.0, 1.0]], dtype=torch.float32)
-        self.layer1.weight = nn.Parameter(w1, requires_grad=False)
-
-        self.relu = nn.ReLU()
-
-        # Layer 3: Takes relu(x2-x1) and produces [-relu(x2-x1), relu(x2-x1)]
-        # Keras kernel shape: (in_features, out_features) = (1, 2) -> [[-1.0, 1.0]]
-        # PyTorch weight shape: (out_features, in_features) = (2, 1)
-        self.layer3 = nn.Linear(1, 2, bias=False)
-        w3 = torch.tensor([[-1.0], [1.0]], dtype=torch.float32)
-        self.layer3.weight = nn.Parameter(w3, requires_grad=False)
-
-        # Layer 4: Permutes an input pair [x1, x2] to [x2, x1]
-        # Keras kernel shape: (in_features, out_features) = (2, 2) -> [[0,1],[1,0]]
-        # PyTorch weight shape: (out_features, in_features) = (2, 2)
-        # The permutation matrix is symmetric, so it's the same.
-        self.layer4 = nn.Linear(2, 2, bias=False)
-        w4 = torch.tensor([[0.0, 1.0], [1.0, 0.0]], dtype=torch.float32)
-        self.layer4.weight = nn.Parameter(w4, requires_grad=False)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # Store original shape to reshape at the end
-        original_shape = x.shape
-        batch_size = original_shape[0]
-        
-        # Check if the total number of features is even
-        num_features = np.prod(original_shape[1:])
-        if num_features % 2 != 0:
-            raise ValueError(f"The total number of features must be even, but got {num_features}.")
-
-        # Reshape the input into groups of 2. Shape: (batch_size, n_dim, 2)
-        # where n_dim is the total number of pairs.
-        # reshaped_x = x.view(original_shape[0], -1, 2)
-        reshaped_x = x.reshape(batch_size, -1, 2)
-
-        # Step 1: Compute x2 - x1
-        # output_1 shape: (batch_size, n_dim, 1)
-        output_1 = self.layer1(reshaped_x)
-
-        # Step 2: Apply ReLU -> relu(x2 - x1)
-        # output_2 shape: (batch_size, n_dim, 1)
-        output_2 = self.relu(output_1)
-
-        # Step 3: Create [-relu(x2-x1), relu(x2-x1)]
-        # output_3 shape: (batch_size, n_dim, 2)
-        output_3 = self.layer3(output_2)
-
-        # Step 4: Permute the original input pair to [x2, x1]
-        # output_4 shape: (batch_size, n_dim, 2)
-        output_4 = self.layer4(reshaped_x)
-
-        # Step 5: Add the two results to get the sorted pair
-        # [-relu(x2-x1)+x2, relu(x2-x1)+x1] = [min(x1, x2), max(x1, x2)]
-        sorted_pairs = output_3 + output_4
-
-        # Step 6: Reshape the sorted pairs back to the original input shape
-        output = sorted_pairs.view(original_shape)
-
-        return output
-    
-
-class ReLU_GroupSort2_2D(nn.Module):
-    """
-    A PyTorch module that sorts pairs of features.
-
-    This implementation is specifically designed to be compatible with verification 
-    tools like auto_lirpa by ensuring that the internal ReLU activation is
-    applied to a standard 2D tensor. It expects a 2D input of shape 
-    (batch_size, num_features).
-    """
-    def __init__(self):
-        super(ReLU_GroupSort2_2D, self).__init__()
-        # On n'a plus besoin de couches Linear internes, seulement le ReLU
-        self.relu = nn.ReLU()
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # Étape 1: Vérifier que l'entrée est bien 2D
-        if len(x.shape) != 2:
-            raise ValueError(f"Expected a 2D input (batch_size, features), but got shape {x.shape}.")
-        
-        batch_size, num_features = x.shape
-        
-        if num_features % 2 != 0:
-            raise ValueError(f"The number of features must be even, but got {num_features}.")
-
-        # Étape 2: Reshape l'input en paires
-        # Forme : (batch_size, num_pairs, 2)
-        reshaped_x = x.view(batch_size, -1, 2)
-
-        # Étape 3: Séparer x1 et x2 en utilisant le slicing
-        # x1s et x2s auront la forme (batch_size, num_pairs)
-        x1s = reshaped_x[..., 0]
-        x2s = reshaped_x[..., 1]
-
-        # Étape 4: Calculer la différence. Le tenseur 'diff' est 2D.
-        # Forme : (batch_size, num_pairs)
-        diff = x2s - x1s
-
-        # Étape 5: Appliquer ReLU sur le tenseur 2D.
-        # C'est l'étape cruciale qui résout le problème avec auto_lirpa.
-        relu_diff = self.relu(diff)
-
-        # Étape 6: Reconstruire le min et le max en se basant sur la formule
-        # min(x1, x2) = x2 - relu(x2 - x1)
-        # max(x1, x2) = x1 + relu(x2 - x1)
-        y1 = x2s - relu_diff  # C'est le min de chaque paire
-        y2 = x1s + relu_diff  # C'est le max de chaque paire
-
-        # Étape 7: Recombiner les paires triées
-        # On empile le long d'une nouvelle dernière dimension
-        # Forme : (batch_size, num_pairs, 2)
-        sorted_pairs = torch.stack((y1, y2), dim=2)
-
-        # Étape 8: Reshape pour revenir à la forme 2D d'origine
-        # Forme : (batch_size, num_features)
-        output = sorted_pairs.view(batch_size, num_features)
-
-        return output
     
 class GroupSort_General(nn.Module):
     """
@@ -200,7 +64,7 @@ class GroupSort_General(nn.Module):
     """
     def __init__(self):
         super(GroupSort_General, self).__init__()
-        # self.relu = nn.ReLU()
+        self.relu = nn.ReLU()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         original_shape = x.shape
@@ -226,7 +90,7 @@ class GroupSort_General(nn.Module):
         x2s = reshaped_x[..., 1]
         
         diff = x2s - x1s
-        relu_diff = nn.ReLU()(diff)
+        relu_diff = self.relu(diff)
         
         y1 = x2s - relu_diff
         y2 = x1s + relu_diff
@@ -794,149 +658,291 @@ from torch.nn.common_types import _size_2_t
 # --- Helper Module for a LiRPA-compatible export ---
 # This module encapsulates the LiRPA-compatible operations so that the exported
 # model does not depend on our custom ScaledL2NormPool2d class definition.
-class _ExportedL2Pool(nn.Module):
-    def __init__(self, kernel_size, stride, ceil_mode, coeff):
-        super().__init__()
-        self.kernel_size = kernel_size
-        self.stride = stride
-        self.ceil_mode = ceil_mode
-        self.coeff = coeff
-        self.num_elements = self.kernel_size[0] * self.kernel_size[1]
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x_squared = torch.pow(x, 2)
-        avg_of_squares = F.avg_pool2d(
-            x_squared,
-            kernel_size=self.kernel_size,
-            stride=self.stride,
-            ceil_mode=self.ceil_mode
-        )
-        # # --- FIX #1 ---
-        # # Convert the scalar `num_elements` to a 4D tensor before multiplying.
-        # num_elements_4d = torch.tensor(
-        #     self.num_elements, device=x.device, dtype=x.dtype
-        # ).view(1, 1, 1, 1)
-        # sum_of_squares = avg_of_squares * num_elements_4d
-        # pooled = torch.sqrt(sum_of_squares + 1e-9)
-        # # --- FIX #2 ---
-        # # Convert the scalar `coeff` to a 4D tensor before multiplying.
-        # coeff_4d = torch.tensor(
-        #     self.coeff, device=x.device, dtype=x.dtype
-        # ).view(1, 1, 1, 1)
-        # return pooled * coeff_4d
+# class _ExportedL2Pool(nn.Module):
+#     def __init__(self, kernel_size, stride, ceil_mode, coeff):
+#         super().__init__()
+#         self.kernel_size = kernel_size
+#         self.stride = stride
+#         self.ceil_mode = ceil_mode
+#         self.coeff = coeff
+#         self.num_elements = self.kernel_size[0] * self.kernel_size[1]
+        
+#         # ✅ **THE FIX**: Create an nn.AvgPool2d module instance here.
+#         self.avg_pool = nn.AvgPool2d(
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=ceil_mode
+#         )
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         x_squared = torch.pow(x, 2)
+#         # avg_of_squares = F.avg_pool2d(
+#         #     x_squared,
+#         #     kernel_size=self.kernel_size,
+#         #     stride=self.stride,
+#         #     ceil_mode=self.ceil_mode
+#         # )
+#         # ✅ **THE FIX**: Use the module instance instead of the functional call.
+#         avg_of_squares = self.avg_pool(x_squared)
+#         # # --- FIX #1 ---
+#         # # Convert the scalar `num_elements` to a 4D tensor before multiplying.
+#         # num_elements_4d = torch.tensor(
+#         #     self.num_elements, device=x.device, dtype=x.dtype
+#         # ).view(1, 1, 1, 1)
+#         # sum_of_squares = avg_of_squares * num_elements_4d
+#         # pooled = torch.sqrt(sum_of_squares + 1e-9)
+#         # # --- FIX #2 ---
+#         # # Convert the scalar `coeff` to a 4D tensor before multiplying.
+#         # coeff_4d = torch.tensor(
+#         #     self.coeff, device=x.device, dtype=x.dtype
+#         # ).view(1, 1, 1, 1)
+#         # return pooled * coeff_4d
     
 
-        # --- THE MODIF: Force conversion from "patches" to "dense" representation ---
-        # 1. Store the original 4D shape.
-        original_shape = avg_of_squares.shape
-        # 2. Flatten the tensor. This forces auto_LiRPA to convert its internal
-        #    bound representation from Patches to a simple Linear matrix.
-        flattened_avg = torch.flatten(avg_of_squares, 1)
+#         # --- THE MODIF: Force conversion from "patches" to "dense" representation ---
+#         # 1. Store the original 4D shape.
+#         original_shape = avg_of_squares.shape
+#         # 2. Flatten the tensor. This forces auto_LiRPA to convert its internal
+#         #    bound representation from Patches to a simple Linear matrix.
+#         flattened_avg = torch.flatten(avg_of_squares, 1)
 
-        # --- Perform multiplications on the "safe" dense representation ---
-        # Now that the representation is dense, multiplying by a scalar is safe.
-        flattened_sum_of_squares = flattened_avg * self.num_elements
-        flattened_pooled = torch.sqrt(torch.max(flattened_sum_of_squares, torch.tensor(1e-9, device=flattened_sum_of_squares.device, dtype=flattened_sum_of_squares.dtype)))
-        # FIX removed "+ 1e-9" from sqrt
-        flattened_scaled_pooled = flattened_pooled * self.coeff
+#         # --- Perform multiplications on the "safe" dense representation ---
+#         # Now that the representation is dense, multiplying by a scalar is safe.
+#         flattened_sum_of_squares = flattened_avg * self.num_elements
+#         flattened_pooled = torch.sqrt(torch.max(flattened_sum_of_squares, torch.tensor(1e-9, device=flattened_sum_of_squares.device, dtype=flattened_sum_of_squares.dtype)))
+#         # FIX removed "+ 1e-9" from sqrt
+#         flattened_scaled_pooled = flattened_pooled * self.coeff
 
-        # --- Reshape back to the original 4D shape ---
-        # The un-flatten operation is also understood by auto_LiRPA.
-        output = flattened_scaled_pooled.view(original_shape)
+#         # --- Reshape back to the original 4D shape ---
+#         # The un-flatten operation is also understood by auto_LiRPA.
+#         output = flattened_scaled_pooled.view(original_shape)
+#         return output
+
+#     def __repr__(self):
+#         return (f"_ExportedL2Pool(kernel_size={self.kernel_size}, "
+#                 f"stride={self.stride}, coeff={self.coeff})")
+    
+
+# import torch
+# import torch.nn as nn
+
+# class _ExportedL2Pool(nn.Module):
+#     def __init__(self, kernel_size, stride, ceil_mode, coeff):
+#         super().__init__()
+        
+#         # ✅ **THE FIX**: Define constants as 4D tensor buffers.
+#         # The shape (1, 1, 1, 1) allows them to be broadcast correctly
+#         # with the (batch, channel, height, width) tensor shape.
+#         num_elements = float(kernel_size[0] * kernel_size[1])
+#         self.register_buffer('num_elements', torch.tensor(num_elements).view(1, 1, 1, 1))
+#         self.register_buffer('coeff', torch.tensor(float(coeff)).view(1, 1, 1, 1))
+
+#         # Define the avg_pool layer as a module instance
+#         self.avg_pool = nn.AvgPool2d(
+#             kernel_size=kernel_size,
+#             stride=stride,
+#             ceil_mode=ceil_mode
+#         )
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         # The forward pass logic remains the same.
+#         # PyTorch will automatically handle broadcasting the (1,1,1,1) buffers.
+#         x_squared = x * x
+#         avg_of_squares = self.avg_pool(x_squared)
+#         sum_of_squares = avg_of_squares * self.num_elements
+
+#         pooled = torch.sqrt(sum_of_squares + 1e-9)
+        
+#         output = pooled * self.coeff
+        
+#         return output
+
+#     def __repr__(self):
+#         # Access the first element of the buffer for a clean print representation
+#         coeff_val = self.coeff.item()
+#         return (f"_ExportedL2Pool(kernel_size={self.avg_pool.kernel_size}, "
+#                 f"stride={self.avg_pool.stride}, coeff={coeff_val})")
+    
+
+#     def __repr__(self):
+#         return (f"_ExportedL2Pool(kernel_size={self.avg_pool.kernel_size}, "
+#                 f"stride={self.avg_pool.stride}, coeff={self.coeff})")
+    
+# def computePoolScalingFactor(kernel_size):
+#     if isinstance(kernel_size, tuple):
+#         scalingFactor = math.sqrt(np.prod(np.asarray(kernel_size)))
+#     else:
+#         scalingFactor = kernel_size
+#     return scalingFactor
+
+# class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
+#     def __init__(
+#         self,
+#         kernel_size: _size_2_t,
+#         stride: Optional[_size_2_t] = None,
+#         ceil_mode: bool = False,
+#         k_coef_lip: float = 1.0,
+#     ):
+#         """
+#         auto_LiRPA-compatible L2-norm pooling layer.
+#         """
+#         # We no longer inherit from LPPool2d, but directly from our custom base class
+#         # and nn.Module (via LipschitzModule).
+#         torch.nn.Module.__init__(self)
+#         torchlip.module.LipschitzModule.__init__(self, k_coef_lip)
+        
+#         self.kernel_size = _pair(kernel_size)
+#         self.stride = _pair(stride) if stride is not None else self.kernel_size
+#         self.ceil_mode = ceil_mode
+
+#         self.scalingFactor = computePoolScalingFactor(self.kernel_size)
+
+#         if self.stride != self.kernel_size:
+#             raise RuntimeError("For provable robustness, stride must be equal to kernel_size for this implementation.")
+
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         # 1. Square the input tensor element-wise.
+#         # This is a basic operation that auto_LiRPA can handle.
+#         x_squared = torch.pow(x, 2)
+        
+#         # 2. Apply average pooling.
+#         # auto_LiRPA has native support for AvgPool2d.
+#         sum_squared = F.avg_pool2d(
+#             x_squared,
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=self.ceil_mode
+#         )
+        
+#         # 3. Get the number of elements in the pooling window.
+#         num_elements_in_kernel = self.kernel_size[0] * self.kernel_size[1]
+        
+#         # avg_pool(x^2) = (sum(x^2)) / N  =>  sum(x^2) = avg_pool(x^2) * N
+#         sum_squared = sum_squared * num_elements_in_kernel
+        
+#         # 4. Take the element-wise square root.
+#         # torch.sqrt is also a standard supported operation.
+#         # Adding a small epsilon for numerical stability to avoid sqrt(0) gradients issues.
+#         pooled = torch.sqrt(sum_squared + 1e-8)
+        
+#         # 5. Apply the Lipschitz scaling factor.
+#         return pooled * self._coefficient_lip 
+#     # * self.scalingFactor
+        
+#     def __repr__(self):
+#         return (f"ScaledL2NormPool2d(kernel_size={self.kernel_size}, "
+#                 f"stride={self.stride}, k_coef_lip={self._coefficient_lip})")
+
+    
+#     def vanilla_export(self) -> nn.Module:
+#         """
+#         Exports the layer to a self-contained, auto_LiRPA-compatible nn.Module.
+
+#         This function returns a new module that encapsulates the exact same
+#         LiRPA-compatible operations as this layer's forward pass. This is
+#         somewhat redundant, as this layer itself is already compatible.
+#         The primary use for this would be to create a model with no custom
+#         class definitions before saving or deployment.
+
+#         IMPORTANT: For LiRPA analysis, you can use the main ScaledL2NormPool2d
+#         layer directly. You do not need to call this export function first.
+#         """
+#         # This returns a new, standard nn.Module that is also LiRPA-compatible.
+#         return _ExportedL2Pool(
+#             kernel_size=self.kernel_size,
+#             stride=self.stride,
+#             ceil_mode=self.ceil_mode,
+#             coeff=self._coefficient_lip
+#         )
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.nn.common_types import _size_2_t
+from torch.nn.modules.utils import _pair
+from typing import Optional
+
+# This is the verifier-friendly class. It uses nn.Conv2d correctly.
+class _ExportedL2Pool(nn.Module):
+    def __init__(self, in_channels: int, kernel_size: _size_2_t, stride: _size_2_t):
+        super().__init__()
+
+        self.sum_pool = nn.Conv2d(
+            in_channels=in_channels,
+            out_channels=in_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=0,
+            groups=in_channels,
+            bias=False
+        )
+        self.sum_pool.weight.data.fill_(1.0)
+        self.sum_pool.weight.requires_grad = False
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x_squared = x * x
+        sum_of_squares = self.sum_pool(x_squared)
+        output = torch.sqrt(sum_of_squares + 1e-9)
         return output
 
-    def __repr__(self):
-        return (f"_ExportedL2Pool(kernel_size={self.kernel_size}, "
-                f"stride={self.stride}, coeff={self.coeff})")
-    
-def computePoolScalingFactor(kernel_size):
-    if isinstance(kernel_size, tuple):
-        scalingFactor = math.sqrt(np.prod(np.asarray(kernel_size)))
-    else:
-        scalingFactor = kernel_size
-    return scalingFactor
-
-class ScaledL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
+# This is the class you use in your model definition.
+class L2Pool2d(nn.Module, torchlip.module.LipschitzModule):
     def __init__(
         self,
+        in_channels: int,
         kernel_size: _size_2_t,
         stride: Optional[_size_2_t] = None,
-        ceil_mode: bool = False,
-        k_coef_lip: float = 1.0,
+        k_coef_lip=1,
     ):
-        """
-        auto_LiRPA-compatible L2-norm pooling layer.
-        """
-        # We no longer inherit from LPPool2d, but directly from our custom base class
-        # and nn.Module (via LipschitzModule).
         torch.nn.Module.__init__(self)
         torchlip.module.LipschitzModule.__init__(self, k_coef_lip)
-        
+        self.in_channels = in_channels
         self.kernel_size = _pair(kernel_size)
         self.stride = _pair(stride) if stride is not None else self.kernel_size
-        self.ceil_mode = ceil_mode
-
-        self.scalingFactor = computePoolScalingFactor(self.kernel_size)
-
-        if self.stride != self.kernel_size:
-            raise RuntimeError("For provable robustness, stride must be equal to kernel_size for this implementation.")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # 1. Square the input tensor element-wise.
-        # This is a basic operation that auto_LiRPA can handle.
-        x_squared = torch.pow(x, 2)
-        
-        # 2. Apply average pooling.
-        # auto_LiRPA has native support for AvgPool2d.
-        sum_squared = F.avg_pool2d(
-            x_squared,
-            kernel_size=self.kernel_size,
-            stride=self.stride,
-            ceil_mode=self.ceil_mode
+        # This safeguard prevents the verifier from analyzing this non-standard forward pass.
+        raise NotImplementedError(
+            "The L2Pool2d layer is for model definition only. "
+            "You must call model.vanilla_export() before verification."
         )
-        
-        # 3. Get the number of elements in the pooling window.
-        num_elements_in_kernel = self.kernel_size[0] * self.kernel_size[1]
-        
-        # avg_pool(x^2) = (sum(x^2)) / N  =>  sum(x^2) = avg_pool(x^2) * N
-        sum_squared = sum_squared * num_elements_in_kernel
-        
-        # 4. Take the element-wise square root.
-        # torch.sqrt is also a standard supported operation.
-        # Adding a small epsilon for numerical stability to avoid sqrt(0) gradients issues.
-        pooled = torch.sqrt(sum_squared + 1e-8)
-        
-        # 5. Apply the Lipschitz scaling factor.
-        return pooled * self._coefficient_lip 
-    # * self.scalingFactor
-        
-    def __repr__(self):
-        return (f"ScaledL2NormPool2d(kernel_size={self.kernel_size}, "
-                f"stride={self.stride}, k_coef_lip={self._coefficient_lip})")
 
-    
     def vanilla_export(self) -> nn.Module:
-        """
-        Exports the layer to a self-contained, auto_LiRPA-compatible nn.Module.
-
-        This function returns a new module that encapsulates the exact same
-        LiRPA-compatible operations as this layer's forward pass. This is
-        somewhat redundant, as this layer itself is already compatible.
-        The primary use for this would be to create a model with no custom
-        class definitions before saving or deployment.
-
-        IMPORTANT: For LiRPA analysis, you can use the main ScaledL2NormPool2d
-        layer directly. You do not need to call this export function first.
-        """
-        # This returns a new, standard nn.Module that is also LiRPA-compatible.
+        # This correctly returns the verifier-friendly version.
         return _ExportedL2Pool(
+            in_channels=self.in_channels,
             kernel_size=self.kernel_size,
-            stride=self.stride,
-            ceil_mode=self.ceil_mode,
-            coeff=self._coefficient_lip
+            stride=self.stride
         )
 
-    
+
+# A simple module that squares the input
+class Square(nn.Module):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x ** 2
+
+# A simple module that takes the square root of the input
+class Sqrt(nn.Module):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return torch.sqrt(x + 1e-9)
+
+# A helper function that creates and configures our sum-pooling Conv2d layer
+def SumPoolConv2d(in_channels, kernel_size, stride):
+    # Create a standard Conv2d layer
+    conv = nn.Conv2d(
+        in_channels=in_channels,
+        out_channels=in_channels,
+        kernel_size=kernel_size,
+        stride=stride,
+        padding=0,
+        groups=1,
+        bias=False
+    )
+    # Set weights to 1.0 and make them non-trainable
+    conv.weight.data.fill_(1.0)
+    conv.weight.requires_grad = False
+    return conv
+
+
 class ScaledAdaptiveL2NormPool2d(torch.nn.Module, torchlip.module.LipschitzModule):
     def __init__(
         self,
